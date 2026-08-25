@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- ── PWA / TELA CHEIA NO IPHONE ──────────────────────────────────── -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CCNA Review" />
+  <meta name="theme-color" content="#0d1117" />
+
+  <!-- Ícone para tela inicial do iPhone -->
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d1117'/%3E%3Ctext x='90' y='122' font-size='96' text-anchor='middle'%3E📡%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d1117'/%3E%3Ctext x='16' y='26' font-size='22' text-anchor='middle'%3E📡%3C/text%3E%3C/svg%3E" />
+
+  <title>Pocket CCNA Review</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --surface2: #21262d;
+      --border:   #30363d;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --accent:   #58a6ff;
+      --green:    #3fb950;
+      --yellow:   #d29922;
+      --orange:   #f0883e;
+      --red:      #f85149;
+      --purple:   #bc8cff;
+      --cyan:     #39d353;
+      --tag-bg:   #1f2937;
+      --nav-h:    64px;
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────────── */
+    #app { display: flex; flex-direction: column; height: 100dvh; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 12px;
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header .logo { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: -.3px; }
+    header .subtitle { font-size: 11px; color: var(--muted); }
+    header .badge {
+      margin-left: auto;
+      background: var(--accent);
+      color: #0d1117;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      letter-spacing: .4px;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    /* ── BOTTOM NAV ─────────────────────────────────────── */
+    nav {
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      height: calc(var(--nav-h) + var(--safe-bot));
+      padding-bottom: var(--safe-bot);
+      flex-shrink: 0;
+    }
+    nav button {
+      flex: 1;
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    nav button.active { color: var(--accent); }
+    nav button svg { width: 22px; height: 22px; }
+
+    /* ── SECTION VIEWS ──────────────────────────────────── */
+    .view { display: none; padding: 12px 12px 20px; }
+    .view.active { display: block; }
+
+    /* ── FILTER PILLS ───────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 0 0 12px;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      flex-shrink: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      transition: all .15s;
+    }
+    .filter-pill.active { background: var(--accent); border-color: var(--accent); color: #0d1117; }
+
+    /* ── CARD ───────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 14px 12px;
+      margin-bottom: 10px;
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .card-icon {
+      width: 30px; height: 30px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .card-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .card-tag {
+      margin-left: auto;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .card-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .card-body ul { padding-left: 16px; }
+    .card-body li { margin-bottom: 3px; }
+    .card-body b, .card-body strong { color: var(--text); font-weight: 600; }
+    .card-body .hl { color: var(--accent); font-weight: 600; }
+    .card-body .ok { color: var(--green); font-weight: 600; }
+    .card-body .warn { color: var(--yellow); font-weight: 600; }
+    .card-body .bad { color: var(--red); font-weight: 600; }
+
+    /* mini table */
+    .mini-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    .mini-table th {
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      padding: 5px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .mini-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .mini-table tr:last-child td { border-bottom: none; }
+
+    /* ── LAB CARD ───────────────────────────────────────── */
+    .lab-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+    .lab-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 14px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lab-num {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--accent); color: #0d1117;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .lab-title-block { flex: 1; }
+    .lab-title { font-size: 13px; font-weight: 700; color: var(--text); }
+    .lab-obj { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .lab-chevron { color: var(--muted); transition: transform .2s; font-size: 16px; }
+    .lab-card.open .lab-chevron { transform: rotate(180deg); }
+
+    .lab-body { display: none; border-top: 1px solid var(--border); }
+    .lab-card.open .lab-body { display: block; }
+
+    .lab-section { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .lab-section:last-child { border-bottom: none; }
+    .lab-section-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .7px; color: var(--muted); margin-bottom: 8px;
+    }
+    .lab-steps { list-style: none; padding: 0; }
+    .lab-steps li {
+      display: flex; gap: 8px; align-items: flex-start;
+      font-size: 13px; color: var(--text); margin-bottom: 6px;
+    }
+    .lab-steps li .step-n {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; font-size: 10px; font-weight: 700; color: var(--accent);
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* CLI block */
+    .cli-block {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .cli-topbar {
+      background: var(--surface2);
+      padding: 6px 10px;
+      font-size: 10px;
+      color: var(--muted);
+      font-family: "SF Mono", "Fira Code", Menlo, monospace;
+      display: flex; align-items: center; gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cli-topbar::before {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+    .cli-code {
+      padding: 12px;
+      font-family: "SF Mono", "Fira Code", Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+      color: #c9d1d9;
+    }
+    .cli-code .cmd  { color: #79c0ff; }
+    .cli-code .arg  { color: #a5d6ff; }
+    .cli-code .val  { color: var(--green); }
+    .cli-code .cmt  { color: var(--muted); font-style: italic; }
+    .cli-code .mode { color: var(--orange); }
+    .cli-code .kw   { color: var(--purple); }
+
+    /* ── SEARCH ─────────────────────────────────────────── */
+    .search-wrap { position: relative; margin-bottom: 12px; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 16px; }
+    .search-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px 9px 32px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--accent); }
+
+    /* ── EMPTY STATE ─────────────────────────────────────── */
+    .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 13px; }
+
+    /* color helpers for tags */
+    .tag-net  { background: #1c3a5e; color: #58a6ff; }
+    .tag-acc  { background: #1c3a2e; color: #3fb950; }
+    .tag-ipc  { background: #3a2a1c; color: #f0883e; }
+    .tag-svc  { background: #2e1c3a; color: #bc8cff; }
+    .tag-sec  { background: #3a1c1c; color: #f85149; }
+    .tag-aut  { background: #1c2e3a; color: #39d353; }
+
+    .icon-net  { background: #1c3a5e; }
+    .icon-acc  { background: #1c3a2e; }
+    .icon-ipc  { background: #3a2a1c; }
+    .icon-svc  { background: #2e1c3a; }
+    .icon-sec  { background: #3a1c1c; }
+    .icon-aut  { background: #1c2e3a; }
+
+    /* hidden */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div>
+      <div class="logo">📡 Pocket CCNA</div>
+      <div class="subtitle">Review · 200-301</div>
+    </div>
+    <div class="badge">CCNA 200-301</div>
+  </header>
+
+  <main>
+    <!-- ══ TEORIA ══════════════════════════════════════════ -->
+    <div id="view-teoria" class="view active">
+
+      <div class="search-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" id="search-teoria" type="search" placeholder="Buscar pílula…" />
+      </div>
+
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-pill active" data-filter="all">Todos</span>
+        <span class="filter-pill" data-filter="NET">Net Fundamentals</span>
+        <span class="filter-pill" data-filter="ACC">Network Access</span>
+        <span class="filter-pill" data-filter="IPC">IP Connectivity</span>
+        <span class="filter-pill" data-filter="SVC">IP Services</span>
+        <span class="filter-pill" data-filter="SEC">Security</span>
+        <span class="filter-pill" data-filter="AUT">Automation</span>
+      </div>
+
+      <div id="pills-container"></div>
+      <div id="pills-empty" class="empty hidden">Nenhuma pílula encontrada.</div>
+    </div>
+
+    <!-- ══ LABS ════════════════════════════════════════════ -->
+    <div id="view-labs" class="view">
+
+      <div class="search-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" id="search-labs" type="search" placeholder="Buscar laboratório…" />
+      </div>
+
+      <div id="labs-container"></div>
+      <div id="labs-empty" class="empty hidden">Nenhum laboratório encontrado.</div>
+    </div>
+  </main>
+
+  <nav>
+    <button class="active" id="btn-teoria" onclick="showView('teoria')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+      Teoria
+    </button>
+    <button id="btn-labs" onclick="showView('labs')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+      </svg>
+      Laboratórios
+    </button>
+  </nav>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DATA — PÍLULAS TEÓRICAS
+   Para adicionar: copie um objeto do array e ajuste os campos.
+═══════════════════════════════════════════════════════════════ */
+const PILLS = [
+  {
+    id: 1, cat: "NET", icon: "🌐",
+    title: "Modelo OSI — 7 Camadas",
+    html: `
+      <table class="mini-table">
+        <tr><th>#</th><th>Camada</th><th>PDU</th><th>Exemplo</th></tr>
+        <tr><td><b>7</b></td><td>Aplicação</td><td>Data</td><td>HTTP, DNS, SMTP</td></tr>
+        <tr><td><b>6</b></td><td>Apresentação</td><td>Data</td><td>TLS, JPEG</td></tr>
+        <tr><td><b>5</b></td><td>Sessão</td><td>Data</td><td>NetBIOS, RPC</td></tr>
+        <tr><td><b>4</b></td><td>Transporte</td><td>Segmento</td><td>TCP, UDP</td></tr>
+        <tr><td><b>3</b></td><td>Rede</td><td>Pacote</td><td>IP, ICMP</td></tr>
+        <tr><td><b>2</b></td><td>Enlace</td><td>Frame</td><td>Ethernet, PPP</td></tr>
+        <tr><td><b>1</b></td><td>Física</td><td>Bit</td><td>Cabo, Wi-Fi</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Mnemônico (top→down): <b>"All People Seem To Need Data Processing"</b></li>
+        <li>Switch opera na <span class="hl">L2</span> · Router na <span class="hl">L3</span></li>
+      </ul>`
+  },
+  {
+    id: 2, cat: "NET", icon: "📦",
+    title: "TCP vs UDP",
+    html: `
+      <table class="mini-table">
+        <tr><th>Característica</th><th>TCP</th><th>UDP</th></tr>
+        <tr><td>Confiável</td><td><span class="ok">Sim</span></td><td><span class="bad">Não</span></td></tr>
+        <tr><td>Orientado a conexão</td><td><span class="ok">Sim</span></td><td><span class="bad">Não</span></td></tr>
+        <tr><td>Controle de fluxo</td><td><span class="ok">Sim</span></td><td><span class="bad">Não</span></td></tr>
+        <tr><td>Overhead</td><td>Alto</td><td>Baixo</td></tr>
+        <tr><td>Uso típico</td><td>HTTP, FTP, SSH</td><td>DNS, VoIP, TFTP</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Handshake TCP: <span class="hl">SYN → SYN-ACK → ACK</span></li>
+        <li>Encerramento TCP: <span class="hl">FIN → ACK → FIN → ACK</span></li>
+      </ul>`
+  },
+  {
+    id: 3, cat: "NET", icon: "🔢",
+    title: "IPv4 — Classes e CIDR",
+    html: `
+      <table class="mini-table">
+        <tr><th>Classe</th><th>Faixa 1º Octeto</th><th>Máscara Padrão</th><th>Hosts</th></tr>
+        <tr><td><b>A</b></td><td>1 – 126</td><td>/8</td><td>~16,7M</td></tr>
+        <tr><td><b>B</b></td><td>128 – 191</td><td>/16</td><td>~65K</td></tr>
+        <tr><td><b>C</b></td><td>192 – 223</td><td>/24</td><td>254</td></tr>
+        <tr><td><b>D</b></td><td>224 – 239</td><td>Multicast</td><td>—</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Privados: <span class="hl">10.0.0.0/8</span> · <span class="hl">172.16.0.0/12</span> · <span class="hl">192.168.0.0/16</span></li>
+        <li>Loopback: <span class="hl">127.0.0.0/8</span></li>
+        <li>APIPA: <span class="warn">169.254.0.0/16</span> (sem DHCP)</li>
+      </ul>`
+  },
+  {
+    id: 4, cat: "ACC", icon: "🔌",
+    title: "VLANs — Conceitos e Trunk",
+    html: `
+      <ul>
+        <li><b>VLAN</b> = domínio de broadcast lógico separado no switch</li>
+        <li><b>Access port</b>: pertence a <span class="hl">1 VLAN</span>, sem tag</li>
+        <li><b>Trunk port</b>: carrega <span class="hl">múltiplas VLANs</span> com tag <b>802.1Q</b></li>
+        <li><b>Native VLAN</b>: tráfego enviado <span class="warn">sem tag</span> no trunk (padrão: VLAN 1)</li>
+        <li>Range padrão: <b>1–1005</b> · Extended: <b>1006–4094</b></li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Modo</th><th>Comando</th></tr>
+        <tr><td>Access</td><td>switchport mode access</td></tr>
+        <tr><td>Trunk</td><td>switchport mode trunk</td></tr>
+        <tr><td>Atribuir VLAN</td><td>switchport access vlan 10</td></tr>
+        <tr><td>Nativa</td><td>switchport trunk native vlan 99</td></tr>
+      </table>`
+  },
+  {
+    id: 5, cat: "ACC", icon: "🔗",
+    title: "STP — Spanning Tree Protocol",
+    html: `
+      <ul>
+        <li>Evita <span class="bad">loops</span> na camada 2 bloqueando portas redundantes</li>
+        <li><b>Root Bridge</b>: switch com menor <span class="hl">Bridge ID</span> (prioridade + MAC)</li>
+        <li>Prioridade padrão: <b>32768</b> (múltiplos de 4096)</li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Estado STP</th><th>Descrição</th></tr>
+        <tr><td><span class="bad">Blocking</span></td><td>Recebe BPDUs, sem encaminhamento</td></tr>
+        <tr><td><span class="warn">Listening</span></td><td>Processa BPDUs, sem aprendizado</td></tr>
+        <tr><td><span class="warn">Learning</span></td><td>Aprende MACs, sem encaminhamento</td></tr>
+        <tr><td><span class="ok">Forwarding</span></td><td>Operação normal</td></tr>
+        <tr><td><span class="muted">Disabled</span></td><td>Porta desligada</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li><b>PortFast</b>: pula Listening/Learning em portas de host</li>
+        <li><b>BPDU Guard</b>: desliga porta se receber BPDU</li>
+        <li><b>RSTP (802.1w)</b>: convergência muito mais rápida</li>
+      </ul>`
+  },
+  {
+    id: 6, cat: "IPC", icon: "🛣️",
+    title: "OSPF — Estados de Adjacência",
+    html: `
+      <table class="mini-table">
+        <tr><th>Estado</th><th>O que acontece</th></tr>
+        <tr><td><span class="bad">Down</span></td><td>Nenhum Hello recebido</td></tr>
+        <tr><td><span class="warn">Init</span></td><td>Hello recebido, eu não estou no pacote</td></tr>
+        <tr><td><span class="warn">2-Way</span></td><td>Bidirecional; DR/BDR eleito (redes multi-acesso)</td></tr>
+        <tr><td><span class="warn">ExStart</span></td><td>Negocia Master/Slave, DBD inicial</td></tr>
+        <tr><td><span class="warn">Exchange</span></td><td>Troca DBDs (resumo do LSDB)</td></tr>
+        <tr><td><span class="warn">Loading</span></td><td>Solicita LSAs ausentes via LSR</td></tr>
+        <tr><td><span class="ok">Full</span></td><td>Adjacência completa — banco de dados sincronizado</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>DR/BDR: eleitos em redes <span class="hl">Broadcast/NBMA</span></li>
+        <li>Hello interval padrão (Ethernet): <b>10s</b> · Dead: <b>40s</b></li>
+        <li>Metric = <span class="hl">10⁸ / bandwidth (bps)</span></li>
+      </ul>
+      <div style="background:#3a1c1c;border:1px solid #f8514966;border-radius:6px;padding:8px 10px;margin-top:8px;font-size:12px">
+        <span class="bad">⚠ PEGADINHA DA PROVA — auto-cost reference-bandwidth</span><br>
+        <span style="color:var(--text)">Por padrão, a referência de custo OSPF é <b>100 Mbps</b>. Isso faz FastEthernet (100 Mbps) e GigabitEthernet (1 Gbps) receberem o <b>mesmo custo = 1</b>, tornando impossível diferenciar os links. Em redes modernas, o OSPF pode fazer balanceamento incorreto.</span><br><br>
+        <span style="color:var(--text)">Solução obrigatória em ambientes com GigE ou superiores:</span><br>
+        <code style="color:var(--accent);font-family:monospace">router ospf 1</code><br>
+        <code style="color:var(--accent);font-family:monospace">auto-cost reference-bandwidth 1000</code>
+        <span style="color:var(--muted);font-size:11px"> ← ajusta para 1 Gbps (use 10000 para 10 GigE)</span>
+      </div>`
+  },
+  {
+    id: 7, cat: "IPC", icon: "⚖️",
+    title: "Roteamento Estático vs Dinâmico",
+    html: `
+      <table class="mini-table">
+        <tr><th></th><th>Estático</th><th>Dinâmico</th></tr>
+        <tr><td>Configuração</td><td>Manual</td><td>Automática</td></tr>
+        <tr><td>Escalabilidade</td><td><span class="bad">Baixa</span></td><td><span class="ok">Alta</span></td></tr>
+        <tr><td>Convergência</td><td><span class="ok">Imediata</span></td><td>Depende do protocolo</td></tr>
+        <tr><td>Overhead CPU</td><td><span class="ok">Zero</span></td><td>Moderado/Alto</td></tr>
+        <tr><td>Segurança</td><td><span class="ok">Maior</span></td><td>Menor</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Rota estática padrão: <span class="hl">ip route 0.0.0.0 0.0.0.0 [next-hop]</span></li>
+        <li>AD (distância administrativa): <b>Direta=0</b>, <b>Estática=1</b>, <b>OSPF=110</b>, <b>RIP=120</b>, <b>EIGRP=90</b></li>
+      </ul>`
+  },
+  {
+    id: 8, cat: "SVC", icon: "🕐",
+    title: "DHCP — Processo DORA",
+    html: `
+      <ul>
+        <li><span class="hl">D</span>iscover — Cliente broadcast buscando servidor DHCP</li>
+        <li><span class="hl">O</span>ffer — Servidor oferece IP + configurações</li>
+        <li><span class="hl">R</span>equest — Cliente confirma qual oferta aceita</li>
+        <li><span class="hl">A</span>cknowledge — Servidor confirma atribuição</li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Comando</th><th>Função</th></tr>
+        <tr><td>ip helper-address</td><td>Relay em outro segmento</td></tr>
+        <tr><td>ip dhcp excluded-address</td><td>Reserva IPs do pool</td></tr>
+        <tr><td>ip dhcp pool NOME</td><td>Cria pool</td></tr>
+        <tr><td>show ip dhcp binding</td><td>Lista leases ativos</td></tr>
+      </table>`
+  },
+  {
+    id: 9, cat: "SVC", icon: "📋",
+    title: "Syslog — Níveis de Severidade",
+    html: `
+      <table class="mini-table">
+        <tr><th>Nível</th><th>Nome</th><th>Descrição</th></tr>
+        <tr><td><span class="bad">0</span></td><td>Emergency</td><td>Sistema inutilizável</td></tr>
+        <tr><td><span class="bad">1</span></td><td>Alert</td><td>Ação imediata necessária</td></tr>
+        <tr><td><span class="bad">2</span></td><td>Critical</td><td>Condição crítica</td></tr>
+        <tr><td><span class="bad">3</span></td><td>Error</td><td>Condição de erro</td></tr>
+        <tr><td><span class="warn">4</span></td><td>Warning</td><td>Aviso</td></tr>
+        <tr><td><span class="warn">5</span></td><td>Notice</span></td><td>Normal mas significante</td></tr>
+        <tr><td><span class="ok">6</span></td><td>Informational</td><td>Mensagem informativa</td></tr>
+        <tr><td><span class="ok">7</span></td><td>Debug</td><td>Debug detalhado</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>Mnemônico: <b>"Every Awful Cisco Engineer Will Need Daily Inspiration"</b></li>
+        <li>Configurar: <span class="hl">logging host [IP]</span> · <span class="hl">logging trap [level]</span></li>
+      </ul>`
+  },
+  {
+    id: 10, cat: "SEC", icon: "🔒",
+    title: "ACL — Standard vs Extended",
+    html: `
+      <table class="mini-table">
+        <tr><th></th><th>Standard (1-99)</th><th>Extended (100-199)</th></tr>
+        <tr><td>Filtra por</td><td>IP de origem</td><td>Origem, destino, porta, protocolo</td></tr>
+        <tr><td>Posicionamento</td><td>Próximo ao <span class="warn">destino</span></td><td>Próximo à <span class="hl">origem</span></td></tr>
+        <tr><td>Granularidade</td><td>Baixa</td><td>Alta</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Regra implícita no final: <span class="bad">deny any any</span></li>
+        <li>ACLs são processadas de <b>cima para baixo</b>; primeira correspondência vence</li>
+        <li>Aplicar na interface: <span class="hl">ip access-group [ACL] in|out</span></li>
+        <li>Named ACL: <span class="hl">ip access-list extended NOME</span> (editável)</li>
+      </ul>`
+  },
+  {
+    id: 11, cat: "SEC", icon: "🛡️",
+    title: "Port Security",
+    html: `
+      <ul>
+        <li>Limita <b>MACs</b> permitidos por porta do switch</li>
+        <li>Modo: <span class="hl">switchport port-security</span> (requer access mode)</li>
+        <li>Max MACs padrão: <b>1</b></li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Violation Mode</th><th>Ação</th><th>Log</th><th>Porta</th></tr>
+        <tr><td><span class="bad">Shutdown</span></td><td>err-disabled</td><td><span class="ok">Sim</span></td><td>Desativa</td></tr>
+        <tr><td><span class="warn">Restrict</span></td><td>Descarta</td><td><span class="ok">Sim</span></td><td>Mantém up</td></tr>
+        <tr><td>Protect</td><td>Descarta</td><td><span class="bad">Não</span></td><td>Mantém up</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>Sticky MAC: <span class="hl">switchport port-security mac-address sticky</span></li>
+        <li>Reabilitar porta: <span class="hl">shutdown</span> → <span class="hl">no shutdown</span></li>
+      </ul>`
+  },
+  {
+    id: 12, cat: "SVC", icon: "🔄",
+    title: "NAT — Tipos e Terminologia",
+    html: `
+      <table class="mini-table">
+        <tr><th>Tipo</th><th>Descrição</th></tr>
+        <tr><td><b>Static NAT</b></td><td>1 IP privado ↔ 1 IP público fixo</td></tr>
+        <tr><td><b>Dynamic NAT</b></td><td>Pool de IPs públicos compartilhados</td></tr>
+        <tr><td><b>PAT / Overload</b></td><td>Muitos IPs privados → 1 IP público (porta diferente)</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>Inside Local</b>: IP privado do host interno</li>
+        <li><b>Inside Global</b>: IP público que representa o host interno</li>
+        <li><b>Outside Local</b>: IP do servidor externo visto de dentro</li>
+        <li><b>Outside Global</b>: IP real do servidor externo</li>
+        <li>Verificar: <span class="hl">show ip nat translations</span></li>
+      </ul>`
+  },
+  {
+    id: 13, cat: "AUT", icon: "🤖",
+    title: "SDN e Planos de Controle",
+    html: `
+      <ul>
+        <li><b>Data Plane</b>: encaminha pacotes (hardware / ASIC)</li>
+        <li><b>Control Plane</b>: decide para onde encaminhar (protocolos de roteamento)</li>
+        <li><b>Management Plane</b>: administração (SSH, SNMP, NETCONF)</li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Tipo SDN</th><th>Descrição</th></tr>
+        <tr><td>Underlay</td><td>Rede física IP/MPLS tradicional</td></tr>
+        <tr><td>Overlay</td><td>Rede virtual sobre o underlay (VXLAN, GRE)</td></tr>
+        <tr><td>Controller-Based</td><td>Controlador centraliza o control plane</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>Cisco DNA Center = <span class="hl">controlador SDN</span> para campus</li>
+        <li>Northbound API: controlador ↔ apps (REST)</li>
+        <li>Southbound API: controlador ↔ dispositivos (OpenFlow, NETCONF)</li>
+      </ul>`
+  },
+  {
+    id: 14, cat: "AUT", icon: "⚙️",
+    title: "REST APIs e Formatos de Dados",
+    html: `
+      <table class="mini-table">
+        <tr><th>Método HTTP</th><th>Operação CRUD</th></tr>
+        <tr><td><span class="ok">GET</span></td><td>Read (ler)</td></tr>
+        <tr><td><span class="hl">POST</span></td><td>Create (criar)</td></tr>
+        <tr><td><span class="warn">PUT</span></td><td>Update (substituir)</td></tr>
+        <tr><td><span class="warn">PATCH</span></td><td>Update (parcial)</td></tr>
+        <tr><td><span class="bad">DELETE</span></td><td>Delete (remover)</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>JSON</b>: leve, legível, padrão REST APIs Cisco</li>
+        <li><b>XML</b>: estruturado, usado no NETCONF/YANG</li>
+        <li><b>YAML</b>: human-friendly, usado em Ansible</li>
+        <li>Código 200 = OK · 201 = Created · 404 = Not Found · 401 = Unauthorized</li>
+      </ul>`
+  },
+  {
+    id: 15, cat: "NET", icon: "📶",
+    title: "Wi-Fi — Padrões 802.11",
+    html: `
+      <table class="mini-table">
+        <tr><th>Padrão</th><th>Frequência</th><th>Velocidade Máx.</th><th>Apelido</th></tr>
+        <tr><td>802.11a</td><td>5 GHz</td><td>54 Mbps</td><td>—</td></tr>
+        <tr><td>802.11b</td><td>2.4 GHz</td><td>11 Mbps</td><td>—</td></tr>
+        <tr><td>802.11g</td><td>2.4 GHz</td><td>54 Mbps</td><td>—</td></tr>
+        <tr><td>802.11n</td><td>2.4/5 GHz</td><td>600 Mbps</td><td>Wi-Fi 4</td></tr>
+        <tr><td>802.11ac</td><td>5 GHz</td><td>3.5 Gbps</td><td>Wi-Fi 5</td></tr>
+        <tr><td>802.11ax</td><td>2.4/5/6 GHz</td><td>9.6 Gbps</td><td>Wi-Fi 6</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>Canais não sobrepostos 2.4 GHz: <span class="hl">1, 6, 11</span></li>
+        <li>WPA3 = segurança mais forte atual (SAE)</li>
+      </ul>`
+  },
+  {
+    id: 16, cat: "NET", icon: "🔵",
+    title: "IPv6 — Endereçamento e Fundamentos",
+    html: `
+      <table class="mini-table">
+        <tr><th>Tipo</th><th>Prefixo</th><th>Escopo</th></tr>
+        <tr><td><b>GUA</b> (Global Unicast)</td><td>2000::/3</td><td>Roteável na internet</td></tr>
+        <tr><td><b>LLA</b> (Link-Local)</td><td>FE80::/10</td><td>Apenas no link local</td></tr>
+        <tr><td><b>ULA</b> (Unique Local)</td><td>FC00::/7</td><td>Privado (≈ RFC1918)</td></tr>
+        <tr><td><b>Multicast</b></td><td>FF00::/8</td><td>Grupo de destinos</td></tr>
+        <tr><td><b>Loopback</b></td><td>::1/128</td><td>Local apenas</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>EUI-64</b>: divide o MAC em 2 metades · insere <span class="hl">FF:FE</span> no meio · inverte 7º bit</li>
+        <li><b>SLAAC</b>: host gera próprio IP via <span class="hl">Router Advertisement (RA)</span></li>
+        <li><b>NDP</b> substitui ARP — mapeamento exato:</li>
+      </ul>
+      <table class="mini-table" style="margin-top:4px">
+        <tr><th>IPv4 (ARP)</th><th>Mecanismo</th><th>IPv6 (NDP)</th><th>Mecanismo</th></tr>
+        <tr><td><b>ARP Request</b></td><td><span class="bad">Broadcast</span></td><td><b>NS — Neighbor Solicitation</b></td><td><span class="ok">Multicast</span></td></tr>
+        <tr><td><b>ARP Reply</b></td><td>Unicast</td><td><b>NA — Neighbor Advertisement</b></td><td>Unicast</td></tr>
+        <tr><td colspan="2">Descoberta de roteador: não existe</td><td><b>RS → RA</b></td><td><span class="ok">Multicast</span></td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li><span class="ok">Vantagem crítica</span>: NS usa <span class="hl">Solicited-Node Multicast</span> em vez de broadcast — <span class="ok">muito menos tráfego</span> na rede</li>
+        <li>Sem broadcast no IPv6 — usa <span class="warn">multicast</span> e <span class="warn">anycast</span></li>
+        <li>Configurar: <span class="hl">ipv6 unicast-routing</span> · <span class="hl">ipv6 address [addr]/[prefix]</span></li>
+      </ul>`
+  },
+  {
+    id: 17, cat: "NET", icon: "🏗️",
+    title: "Arquiteturas de Rede e Wireless (WLC/CAPWAP)",
+    html: `
+      <table class="mini-table">
+        <tr><th>Arquitetura</th><th>Camadas</th><th>Uso típico</th></tr>
+        <tr><td><b>3-Tier</b></td><td>Core · Distribution · Access</td><td>Campus tradicional grande</td></tr>
+        <tr><td><b>2-Tier (Collapsed Core)</b></td><td>Core/Dist. · Access</td><td>Campus médio</td></tr>
+        <tr><td><b>Spine-Leaf</b></td><td>Spine · Leaf</td><td>Data center / alta performance</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>Spine-Leaf</b>: todo Leaf conecta a todo Spine · sem conexão Leaf-Leaf · latência previsível</li>
+        <li><b>WLC</b> (Wireless LAN Controller): gerencia APs de forma centralizada</li>
+        <li><b>CAPWAP</b>: túnel <span class="hl">UDP 5246</span> (controle) e <span class="hl">UDP 5247</span> (dados) entre AP e WLC</li>
+        <li>AP em modo <span class="hl">Local</span>: tunela todo tráfego ao WLC · modo <span class="warn">FlexConnect</span>: comuta localmente</li>
+        <li>AP autônomo: configurado individualmente, sem WLC</li>
+      </ul>`
+  },
+  {
+    id: 18, cat: "ACC", icon: "🔀",
+    title: "EtherChannel — LACP vs PAgP",
+    html: `
+      <table class="mini-table">
+        <tr><th>Característica</th><th>LACP (802.3ad)</th><th>PAgP</th></tr>
+        <tr><td>Padrão</td><td><span class="ok">IEEE</span></td><td><span class="warn">Cisco proprietário</span></td></tr>
+        <tr><td>Modo ativo</td><td>active</td><td>desirable</td></tr>
+        <tr><td>Modo passivo</td><td>passive</td><td>auto</td></tr>
+        <tr><td>Max interfaces</td><td>8 ativas + 8 standby</td><td>8 ativas</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Requisitos para formação do bundle: <b>mesma velocidade</b>, <b>duplex</b>, <b>VLAN</b>, <b>modo trunk/access</b></li>
+        <li>Modos que NÃO formam bundle: <span class="bad">passive + passive</span> · <span class="bad">auto + auto</span></li>
+        <li>Modos que formam: <span class="ok">active + active</span> · <span class="ok">active + passive</span> · <span class="ok">desirable + desirable</span></li>
+        <li>Verificar: <span class="hl">show etherchannel summary</span> · flag <span class="ok">SU</span> = bundle ativo</li>
+        <li>Configuração: <span class="hl">channel-group [N] mode active|passive|desirable|auto</span></li>
+      </ul>`
+  },
+  {
+    id: 19, cat: "AUT", icon: "🛠️",
+    title: "Ferramentas de Gerenciamento de Configuração",
+    html: `
+      <table class="mini-table">
+        <tr><th>Ferramenta</th><th>Modelo</th><th>Agente</th><th>Linguagem</th><th>Protocolo</th></tr>
+        <tr><td><b>Ansible</b></td><td><span class="ok">Push</span></td><td><span class="ok">Agentless</span></td><td>YAML (Playbooks)</td><td>SSH / NETCONF</td></tr>
+        <tr><td><b>Puppet</b></td><td><span class="warn">Pull</span></td><td><span class="bad">Agent</span></td><td>DSL (Manifests)</td><td>HTTPS</td></tr>
+        <tr><td><b>Chef</b></td><td><span class="warn">Pull</span></td><td><span class="bad">Agent</span></td><td>Ruby (Recipes)</td><td>HTTPS</td></tr>
+        <tr><td><b>Terraform</b></td><td><span class="ok">Push</span></td><td><span class="ok">Agentless</span></td><td>HCL</td><td>APIs REST</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>Ansible</b>: favorito no CCNA — sem agente, usa SSH, ideal para redes Cisco</li>
+        <li><b>Push</b>: controlador envia config aos dispositivos</li>
+        <li><b>Pull</b>: dispositivos buscam config no servidor</li>
+        <li><b>Terraform</b>: foco em infraestrutura como código (IaC), não redes tradicionais</li>
+        <li>NETCONF usa <span class="hl">XML/YANG</span> · protocolo de gerenciamento sobre SSH (porta <b>830</b>)</li>
+      </ul>`
+  },
+  {
+    id: 20, cat: "SVC", icon: "📊",
+    title: "QoS — Classificação, Marcação e Controle",
+    html: `
+      <ul>
+        <li><b>Classificação</b>: identifica o tráfego (ACL, DSCP, CoS)</li>
+        <li><b>Marcação</b>: define o valor de QoS no cabeçalho — <span class="hl">DSCP</span> (L3, 6 bits) ou <span class="hl">CoS</span> (L2, 802.1Q, 3 bits)</li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Mecanismo</th><th>Ação ao exceder</th><th>Delay</th><th>Uso típico</th></tr>
+        <tr><td><b>Policing</b></td><td><span class="bad">Drop ou re-mark</span></td><td><span class="ok">Não adiciona</span></td><td>Entrada de provedor / SLA</td></tr>
+        <tr><td><b>Shaping</b></td><td><span class="warn">Bufferiza (delay)</span></td><td><span class="bad">Adiciona jitter</span></td><td>Saída para WAN</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>DSCP <b>EF</b> (46) = VoIP · <b>AF41</b> = vídeo · <b>CS0</b> = best-effort</li>
+        <li>Filas: <span class="hl">CBWFQ</span> (por classe) · <span class="hl">LLQ</span> = CBWFQ + fila prioritária para voz</li>
+        <li>Sem QoS = <span class="warn">best-effort</span> (FIFO)</li>
+      </ul>`
+  },
+  {
+    id: 21, cat: "SEC", icon: "🕵️",
+    title: "Segurança L2 — DHCP Snooping e DAI",
+    html: `
+      <table class="mini-table">
+        <tr><th>Recurso</th><th>Ataque que mitiga</th><th>Mecanismo</th></tr>
+        <tr><td><b>DHCP Snooping</b></td><td>Rogue DHCP Server</td><td>Porta trusted/untrusted</td></tr>
+        <tr><td><b>DAI</b></td><td>ARP Spoofing / Poisoning</td><td>Valida ARP vs tabela DHCP</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>DHCP Snooping</b>: portas <span class="ok">trusted</span> (uplinks/servidor) aceitam OFFER/ACK · portas <span class="bad">untrusted</span> (hosts) só podem enviar DISCOVER/REQUEST</li>
+        <li>Habilitar: <span class="hl">ip dhcp snooping</span> · <span class="hl">ip dhcp snooping vlan [N]</span></li>
+        <li>Marcar trusted: <span class="hl">ip dhcp snooping trust</span> (na interface uplink)</li>
+        <li><b>DAI</b>: usa a binding table do DHCP Snooping para validar pacotes ARP</li>
+        <li>Habilitar DAI: <span class="hl">ip arp inspection vlan [N]</span> · interface trusted: <span class="hl">ip arp inspection trust</span></li>
+        <li>Verificar: <span class="hl">show ip dhcp snooping binding</span> · <span class="hl">show ip arp inspection</span></li>
+      </ul>`
+  },
+  {
+    id: 22, cat: "SEC", icon: "📡",
+    title: "Segurança Wireless — WPA2, WPA3 e AAA",
+    html: `
+      <table class="mini-table">
+        <tr><th></th><th>WPA2</th><th>WPA3</th></tr>
+        <tr><td>Autenticação Personal</td><td>PSK (senha)</td><td>SAE (Dragonfly)</td></tr>
+        <tr><td>Autenticação Enterprise</td><td>802.1X + EAP + RADIUS</td><td>802.1X + EAP + RADIUS</td></tr>
+        <tr><td>Proteção offline dict.</td><td><span class="bad">Vulnerável</span></td><td><span class="ok">Protegido</span></td></tr>
+        <tr><td>Forward Secrecy</td><td><span class="bad">Não</span></td><td><span class="ok">Sim</span></td></tr>
+        <tr><td>Criptografia</td><td>AES-CCMP</td><td>AES-GCMP-256</td></tr>
+      </table>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Modo</th><th>Autenticação</th><th>Uso típico</th></tr>
+        <tr><td><b>Personal (PSK)</b></td><td>Senha pré-compartilhada</td><td>Residencial / pequenas redes</td></tr>
+        <tr><td><b>Enterprise</b></td><td>Servidor <span class="hl">RADIUS</span> + 802.1X + EAP</td><td>Corporativo — auth por usuário</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li><b>802.1X</b>: Supplicant (cliente) → Authenticator (AP/switch) → Authentication Server (RADIUS)</li>
+        <li><b>EAP</b>: protocolo de troca de credenciais dentro do 802.1X</li>
+        <li>WPA3-Personal usa <span class="hl">SAE</span> em vez de PSK — resiste a ataques de dicionário offline</li>
+      </ul>`
+  },
+  {
+    id: 23, cat: "SEC", icon: "⚠️",
+    title: "Ameaças de Rede e AAA — RADIUS vs TACACS+",
+    html: `
+      <ul>
+        <li><b>Vulnerabilidade</b>: fraqueza no sistema (ex: porta aberta, software desatualizado)</li>
+        <li><b>Ameaça</b>: potencial de explorar uma vulnerabilidade (ex: atacante com exploit)</li>
+        <li><b>Exploit</b>: mecanismo/código que efetivamente usa a vulnerabilidade</li>
+        <li><b>Risco</b> = Probabilidade × Impacto</li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Característica</th><th>RADIUS</th><th>TACACS+</th></tr>
+        <tr><td>Transporte</td><td><span class="warn">UDP 1812/1813</span></td><td><span class="ok">TCP 49</span></td></tr>
+        <tr><td>Criptografia</td><td><span class="warn">Apenas a senha</span></td><td><span class="ok">Payload inteiro</span></td></tr>
+        <tr><td>Separação AAA</td><td><span class="bad">Combina Auth+Author</span></td><td><span class="ok">Auth / Author / Acct separados</span></td></tr>
+        <tr><td>Padrão</td><td><span class="ok">Aberto (RFC)</span></td><td><span class="warn">Proprietário Cisco</span></td></tr>
+        <tr><td>Uso típico</td><td>Autenticação de usuários Wi-Fi</td><td>Acesso administrativo a dispositivos</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>AAA = <span class="hl">Authentication</span> (quem é?) · <span class="hl">Authorization</span> (o que pode?) · <span class="hl">Accounting</span> (o que fez?)</li>
+        <li>Para gerenciar roteadores/switches Cisco: prefira <span class="hl">TACACS+</span></li>
+        <li>Para autenticar usuários VPN/Wi-Fi: prefira <span class="hl">RADIUS</span></li>
+      </ul>`
+  },
+  {
+    id: 24, cat: "AUT", icon: "📄",
+    title: "JSON — Leitura Rápida de Payload",
+    html: `
+      <ul>
+        <li><b>Objeto / Dicionário</b>: delimitado por <span class="hl">{ }</span> — coleção de pares chave-valor</li>
+        <li><b>Array / Lista</b>: delimitado por <span class="hl">[ ]</span> — lista ordenada de valores</li>
+        <li><b>Par chave-valor</b>: <span class="hl">"chave": valor</span> — separados por dois-pontos</li>
+        <li><b>Tipos de valor</b>: string <span class="ok">"texto"</span> · number <span class="ok">42</span> · boolean <span class="ok">true/false</span> · null · objeto · array</li>
+      </ul>
+      <div style="background:#010409;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px;font-family:monospace;font-size:12px;line-height:1.8">
+        <span style="color:var(--muted)">{</span><br>
+        &nbsp;&nbsp;<span style="color:var(--accent)">"hostname"</span>: <span style="color:var(--green)">"R1"</span>,<br>
+        &nbsp;&nbsp;<span style="color:var(--accent)">"interfaces"</span>: <span style="color:var(--muted)">[</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)">{</span> <span style="color:var(--accent)">"name"</span>: <span style="color:var(--green)">"GigE0/0"</span>, <span style="color:var(--accent)">"enabled"</span>: <span style="color:var(--orange)">true</span> <span style="color:var(--muted)">}</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)">{</span> <span style="color:var(--accent)">"name"</span>: <span style="color:var(--green)">"GigE0/1"</span>, <span style="color:var(--accent)">"enabled"</span>: <span style="color:var(--orange)">false</span> <span style="color:var(--muted)">}</span><br>
+        &nbsp;&nbsp;<span style="color:var(--muted)">]</span>,<br>
+        &nbsp;&nbsp;<span style="color:var(--accent)">"ospf_areas"</span>: <span style="color:var(--orange)">1</span><br>
+        <span style="color:var(--muted)">}</span>
+      </div>
+      <ul style="margin-top:8px">
+        <li><span class="hl">{ }</span> = objeto · <span class="hl">[ ]</span> = array · <span class="hl">" "</span> = string</li>
+        <li>Vírgula separa elementos · <b>último elemento</b> da lista <span class="bad">não leva vírgula</span></li>
+        <li>JSON é <b>case-sensitive</b>: <span class="bad">"Name" ≠ "name"</span></li>
+      </ul>`
+  },
+  {
+    id: 25, cat: "NET", icon: "🔌",
+    title: "Cabeamento, PoE e Virtualização",
+    html: `
+      <table class="mini-table">
+        <tr><th>Fibra</th><th>Núcleo</th><th>Distância</th><th>Custo</th></tr>
+        <tr><td><b>Single-mode (SMF)</b></td><td>~9 µm</td><td><span class="ok">Até 100 km+</span></td><td><span class="bad">Alto</span></td></tr>
+        <tr><td><b>Multimode (MMF)</b></td><td>50–62.5 µm</td><td><span class="warn">Até ~550 m</span></td><td><span class="ok">Baixo</span></td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>PoE (802.3af)</b>: até <span class="hl">15.4W</span> por porta · PoE+ (802.3at): até <span class="hl">30W</span> · PoE++ (802.3bt): até <span class="hl">60–100W</span></li>
+        <li>PoE alimenta APs, câmeras IP e telefones VoIP pelo cabo de dados</li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th></th><th>Máquinas Virtuais (VMs)</th><th>Containers</th></tr>
+        <tr><td>Isolamento</td><td><span class="ok">SO completo por VM</span></td><td><span class="warn">Kernel compartilhado</span></td></tr>
+        <tr><td>Overhead</td><td><span class="bad">Alto</span></td><td><span class="ok">Baixo</span></td></tr>
+        <tr><td>Boot</td><td>Minutos</td><td>Segundos</td></tr>
+        <tr><td>Tecnologia</td><td>VMware, Hyper-V, KVM</td><td>Docker, Kubernetes</td></tr>
+        <tr><td>Hypervisor</td><td>Tipo 1 (bare-metal) / Tipo 2 (hosted)</td><td>Não usa hypervisor</td></tr>
+      </table>`
+  },
+  {
+    id: 26, cat: "IPC", icon: "🎯",
+    title: "Lógica de Decisão de Roteamento (LPM)",
+    html: `
+      <ul>
+        <li>O roteador usa <b>3 critérios em ordem estrita</b> para escolher a melhor rota:</li>
+      </ul>
+      <table class="mini-table" style="margin-top:6px">
+        <tr><th>Ordem</th><th>Critério</th><th>Regra</th></tr>
+        <tr><td><span class="hl"><b>1º</b></span></td><td><b>LPM — Longest Prefix Match</b></td><td>Máscara mais longa (mais específica) <span class="ok">sempre vence</span></td></tr>
+        <tr><td><span class="warn"><b>2º</b></span></td><td><b>Administrative Distance (AD)</b></td><td>Menor AD vence — desempata protocolos diferentes</td></tr>
+        <tr><td><span class="muted"><b>3º</b></span></td><td><b>Métrica</b></td><td>Menor métrica vence — desempata rotas do <i>mesmo</i> protocolo</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li><b>Exemplo LPM</b>: destino <span class="hl">10.1.1.5</span> → rota <span class="bad">10.0.0.0/8</span> vs <span class="ok">10.1.1.0/24</span> → vence <span class="ok">/24</span> (mais específica)</li>
+        <li><b>Exemplo AD</b>: OSPF (AD 110) vs EIGRP (AD 90) para mesma rede → vence <span class="ok">EIGRP</span></li>
+        <li><b>Exemplo Métrica</b>: dois caminhos OSPF para mesma rede → vence o de menor <span class="hl">cost</span></li>
+        <li>Rota <span class="hl">0.0.0.0/0</span> = rota padrão (gateway of last resort) — correspondência mais genérica possível</li>
+        <li>Se <b>nenhuma rota</b> corresponde → pacote é <span class="bad">descartado</span> (ICMP Unreachable)</li>
+      </ul>`
+  },
+  {
+    id: 27, cat: "ACC", icon: "🗂️",
+    title: "Comutação L2 — Tabela MAC e DTP",
+    html: `
+      <ul>
+        <li>Switch popula a <b>tabela MAC</b> (CAM table) com 3 operações:</li>
+      </ul>
+      <table class="mini-table" style="margin-top:6px">
+        <tr><th>Operação</th><th>Gatilho</th><th>Ação</th></tr>
+        <tr><td><span class="ok"><b>Learn</b></span></td><td>Frame recebido</td><td>Associa MAC de <b>origem</b> à porta de entrada</td></tr>
+        <tr><td><span class="hl"><b>Forward</b></span></td><td>MAC destino <b>conhecido</b></td><td>Envia frame somente pela porta correta</td></tr>
+        <tr><td><span class="warn"><b>Flood</b></span></td><td>MAC destino <b>desconhecido</b> (Unknown Unicast)</td><td>Envia por <b>todas</b> as portas exceto a de origem</td></tr>
+      </table>
+      <ul style="margin-top:8px">
+        <li>Broadcast e Multicast também são sempre <span class="warn">flooded</span></li>
+        <li>Aging time padrão da tabela MAC: <span class="hl">300 segundos</span></li>
+      </ul>
+      <table class="mini-table" style="margin-top:8px">
+        <tr><th>Modo DTP</th><th>Porta local</th><th>Resultado com "dynamic auto"</th><th>Resultado com "dynamic desirable"</th></tr>
+        <tr><td><b>dynamic auto</b></td><td>Espera passivamente</td><td><span class="bad">Access (não forma trunk)</span></td><td><span class="ok">Trunk</span></td></tr>
+        <tr><td><b>dynamic desirable</b></td><td>Negocia ativamente</td><td><span class="ok">Trunk</span></td><td><span class="ok">Trunk</span></td></tr>
+        <tr><td><b>trunk</b></td><td>Força trunk</td><td><span class="ok">Trunk</span></td><td><span class="ok">Trunk</span></td></tr>
+        <tr><td><b>access</b></td><td>Força access</td><td><span class="bad">Access</span></td><td><span class="bad">Access</span></td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>Segurança: use <span class="hl">switchport nonegotiate</span> para desabilitar DTP — previne negociação não autorizada de trunk</li>
+        <li>Verificar: <span class="hl">show interfaces trunk</span> · <span class="hl">show dtp interface</span></li>
+      </ul>`
+  },
+  {
+    id: 28, cat: "NET", icon: "📶",
+    title: "Interfaces Lógicas da WLC",
+    html: `
+      <ul>
+        <li>A WLC usa <b>interfaces lógicas</b> para separar tipos de tráfego — muito cobrado em questões de associação</li>
+      </ul>
+      <table class="mini-table" style="margin-top:6px">
+        <tr><th>Interface</th><th>Função</th><th>Detalhe</th></tr>
+        <tr><td><b>Management</b></td><td>Gerenciamento da WLC</td><td>SSH, HTTPS, SNMP, RADIUS · <span class="hl">obrigatória</span></td></tr>
+        <tr><td><b>Virtual</b></td><td>Mobilidade e DHCP relay</td><td>IP fictício (ex: 1.1.1.1) · nunca roteado · usado no handoff de roaming</td></tr>
+        <tr><td><b>Service-Port</b></td><td>Gerenciamento out-of-band</td><td>Porta física dedicada · usada quando a rede está fora do ar</td></tr>
+        <tr><td><b>Dynamic</b></td><td>Tráfego de dados de clientes Wi-Fi</td><td>Mapeada 1:1 para uma VLAN · uma por WLAN/SSID</td></tr>
+        <tr><td><b>AP-Manager</b></td><td>Comunicação WLC ↔ APs (CAPWAP)</td><td>Pode coincidir com Management em deployments menores</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li>Cada <b>Dynamic Interface</b> = uma VLAN de dados para um SSID específico</li>
+        <li>A <b>Virtual Interface</b> não precisa ser roteável — IP <span class="warn">arbitrário não usado</span> na rede real</li>
+        <li>Verificar: <span class="hl">show interface summary</span> na CLI da WLC</li>
+      </ul>`
+  },
+  {
+    id: 29, cat: "IPC", icon: "🔁",
+    title: "FHRP — HSRP vs VRRP vs GLBP",
+    html: `
+      <ul>
+        <li><b>FHRP</b> (First Hop Redundancy Protocol): fornece um <span class="hl">gateway padrão virtual</span> resiliente para os hosts</li>
+      </ul>
+      <table class="mini-table" style="margin-top:6px">
+        <tr><th>Característica</th><th>HSRP</th><th>VRRP</th><th>GLBP</th></tr>
+        <tr><td>Padrão</td><td><span class="warn">Cisco proprietário</span></td><td><span class="ok">IEEE (RFC 5798)</span></td><td><span class="warn">Cisco proprietário</span></td></tr>
+        <tr><td>Papéis</td><td>Active / Standby</td><td>Master / Backup</td><td>AVG + AVF</td></tr>
+        <tr><td>Load Balancing</td><td><span class="bad">Não</span></td><td><span class="bad">Não</span></td><td><span class="ok">Sim (ativo-ativo)</span></td></tr>
+        <tr><td>MAC virtual</td><td>0000.0c07.ac<b>XX</b></td><td>0000.5e00.01<b>XX</b></td><td>0007.b400.XX<b>YY</b></td></tr>
+        <tr><td>Versões</td><td>v1 (IPv4) / v2 (IPv4+IPv6)</td><td>v2 (IPv4) / v3 (IPv6)</td><td>—</td></tr>
+        <tr><td>Hello / Hold</td><td>3s / 10s</td><td>1s / 3s</td><td>3s / 10s</td></tr>
+      </table>
+      <ul style="margin-top:6px">
+        <li><b>HSRP Active</b>: router com maior prioridade (padrão 100) · em empate, maior IP vence</li>
+        <li><b>GLBP AVG</b>: Active Virtual Gateway — distribui MACs virtuais distintos para cada AVF (Active Virtual Forwarder)</li>
+        <li><b>Preempt</b>: deve ser configurado explicitamente no HSRP/GLBP para que o router de maior prioridade reassuma o papel após recuperação</li>
+        <li>Todos os FHRPs operam na <span class="hl">camada 3</span> e usam <span class="hl">multicast</span> para comunicação entre peers</li>
+      </ul>`
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA — LABORATÓRIOS
+   Para adicionar: copie um objeto e preencha title/obj/steps/cli
+═══════════════════════════════════════════════════════════════ */
+const LABS = [
+  {
+    id: 1,
+    title: "Router on a Stick (Inter-VLAN Routing)",
+    obj: "Permitir comunicação entre VLANs usando subinterfaces no router.",
+    steps: [
+      "Criar VLANs no switch e atribuir portas de acesso",
+      "Configurar o link switch→router como trunk (802.1Q)",
+      "No router, criar subinterfaces para cada VLAN",
+      "Definir encapsulamento dot1q e atribuir o IP gateway de cada VLAN",
+      "Ativar a interface física pai (sem IP direto)"
+    ],
+    cli: `<span class="cmt">! ── SWITCH ──────────────────────────────</span>
+SW(config)<span class="mode">#</span> <span class="cmd">vlan</span> <span class="val">10</span>
+SW(config-vlan)<span class="mode">#</span> <span class="cmd">name</span> <span class="val">VENDAS</span>
+SW(config-vlan)<span class="mode">#</span> <span class="cmd">vlan</span> <span class="val">20</span>
+SW(config-vlan)<span class="mode">#</span> <span class="cmd">name</span> <span class="val">TI</span>
+SW(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">fa0/1</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport mode</span> <span class="kw">access</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport access vlan</span> <span class="val">10</span>
+SW(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">fa0/24</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport mode</span> <span class="kw">trunk</span>
+
+<span class="cmt">! ── ROUTER ──────────────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0.10</span>
+R1(config-subif)<span class="mode">#</span> <span class="cmd">encapsulation dot1Q</span> <span class="val">10</span>
+R1(config-subif)<span class="mode">#</span> <span class="cmd">ip address</span> <span class="val">192.168.10.1 255.255.255.0</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0.20</span>
+R1(config-subif)<span class="mode">#</span> <span class="cmd">encapsulation dot1Q</span> <span class="val">20</span>
+R1(config-subif)<span class="mode">#</span> <span class="cmd">ip address</span> <span class="val">192.168.20.1 255.255.255.0</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">no shutdown</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip route</span>
+R1<span class="mode">#</span> <span class="cmd">show interfaces</span> <span class="arg">g0/0.10</span>`
+  },
+  {
+    id: 2,
+    title: "OSPFv2 Single-Area (Área 0)",
+    obj: "Configurar OSPF área backbone em múltiplos routers e verificar adjacência Full.",
+    steps: [
+      "Atribuir IPs nas interfaces conectadas entre os routers",
+      "Ativar OSPF com 'router ospf [ID]' em cada router",
+      "Anunciar as redes com 'network [ip] [wildcard] area 0'",
+      "Verificar adjacências com 'show ip ospf neighbor'",
+      "Confirmar tabela de rotas com 'show ip route ospf'"
+    ],
+    cli: `<span class="cmt">! ── R1 ──────────────────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">router ospf</span> <span class="val">1</span>
+R1(config-router)<span class="mode">#</span> <span class="cmd">router-id</span> <span class="val">1.1.1.1</span>
+R1(config-router)<span class="mode">#</span> <span class="cmd">network</span> <span class="val">10.0.12.0 0.0.0.255</span> <span class="kw">area 0</span>
+R1(config-router)<span class="mode">#</span> <span class="cmd">network</span> <span class="val">192.168.1.0 0.0.0.255</span> <span class="kw">area 0</span>
+R1(config-router)<span class="mode">#</span> <span class="cmd">passive-interface</span> <span class="arg">g0/1</span>
+
+<span class="cmt">! ── R2 ──────────────────────────────────</span>
+R2(config)<span class="mode">#</span> <span class="cmd">router ospf</span> <span class="val">1</span>
+R2(config-router)<span class="mode">#</span> <span class="cmd">router-id</span> <span class="val">2.2.2.2</span>
+R2(config-router)<span class="mode">#</span> <span class="cmd">network</span> <span class="val">0.0.0.0 255.255.255.255</span> <span class="kw">area 0</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip ospf neighbor</span>
+R1<span class="mode">#</span> <span class="cmd">show ip route ospf</span>
+R1<span class="mode">#</span> <span class="cmd">show ip ospf interface</span> <span class="arg">brief</span>`
+  },
+  {
+    id: 3,
+    title: "Port Security com Sticky MAC",
+    obj: "Proteger porta de acesso permitindo apenas 1 MAC, desligando em violação.",
+    steps: [
+      "Configurar a porta como access (Port Security não funciona em trunk)",
+      "Ativar port-security na interface",
+      "Definir máximo de 1 endereço MAC",
+      "Habilitar sticky para aprender o MAC automaticamente",
+      "Definir violation mode como shutdown",
+      "Verificar e salvar configuração"
+    ],
+    cli: `SW(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">fa0/5</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport mode</span> <span class="kw">access</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport access vlan</span> <span class="val">10</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport port-security</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport port-security maximum</span> <span class="val">1</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport port-security mac-address</span> <span class="kw">sticky</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">switchport port-security violation</span> <span class="kw">shutdown</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+SW<span class="mode">#</span> <span class="cmd">show port-security interface</span> <span class="arg">fa0/5</span>
+SW<span class="mode">#</span> <span class="cmd">show port-security address</span>
+
+<span class="cmt">! ── REABILITAR porta err-disabled ───────</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">shutdown</span>
+SW(config-if)<span class="mode">#</span> <span class="cmd">no shutdown</span>`
+  },
+  {
+    id: 4,
+    title: "ACL Extended — Bloqueio de Tráfego HTTP",
+    obj: "Criar ACL nomeada para bloquear HTTP (porta 80) de uma subnet para um servidor.",
+    steps: [
+      "Criar a ACL nomeada extended no modo de configuração global",
+      "Adicionar regra deny para TCP da subnet origem ao destino porta 80",
+      "Adicionar permit ip any any para não bloquear demais tráfegos",
+      "Aplicar a ACL na interface mais próxima da origem (inbound)",
+      "Verificar hits nos contadores da ACL"
+    ],
+    cli: `<span class="cmt">! ── CRIAR ACL ───────────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip access-list extended</span> <span class="val">BLOQUEIA-HTTP</span>
+R1(config-ext-nacl)<span class="mode">#</span> <span class="cmd">deny</span> <span class="kw">tcp</span> <span class="val">192.168.10.0 0.0.0.255</span> <span class="arg">host 10.0.0.100</span> <span class="kw">eq</span> <span class="val">80</span>
+R1(config-ext-nacl)<span class="mode">#</span> <span class="cmd">permit</span> <span class="kw">ip any any</span>
+
+<span class="cmt">! ── APLICAR NA INTERFACE ────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">ip access-group</span> <span class="val">BLOQUEIA-HTTP</span> <span class="kw">in</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip access-lists</span> <span class="arg">BLOQUEIA-HTTP</span>
+R1<span class="mode">#</span> <span class="cmd">show ip interface</span> <span class="arg">g0/0</span>`
+  },
+  {
+    id: 5,
+    title: "NAT com PAT (Overload)",
+    obj: "Configurar PAT para que hosts internos acessem a internet usando 1 IP público.",
+    steps: [
+      "Definir qual interface é 'inside' e qual é 'outside'",
+      "Criar ACL standard identificando os hosts internos a traduzir",
+      "Configurar NAT overload referenciando a ACL e a interface outside",
+      "Verificar traduções ativas na tabela NAT"
+    ],
+    cli: `<span class="cmt">! ── INTERFACES ──────────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">ip nat</span> <span class="kw">inside</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/1</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">ip nat</span> <span class="kw">outside</span>
+
+<span class="cmt">! ── ACL E NAT OVERLOAD ───────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">access-list</span> <span class="val">1</span> <span class="cmd">permit</span> <span class="val">192.168.0.0 0.0.255.255</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip nat inside source list</span> <span class="val">1</span> <span class="cmd">interface</span> <span class="arg">g0/1</span> <span class="kw">overload</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip nat translations</span>
+R1<span class="mode">#</span> <span class="cmd">show ip nat statistics</span>
+R1<span class="mode">#</span> <span class="cmd">debug ip nat</span>`
+  },
+  {
+    id: 6,
+    title: "DHCP Server no Router IOS",
+    obj: "Configurar o router como servidor DHCP com exclusão de IPs e relay para outra VLAN.",
+    steps: [
+      "Excluir IPs reservados (gateways, servidores) do pool DHCP",
+      "Criar o pool com nome, rede, gateway padrão e DNS",
+      "Em redes remotas, configurar ip helper-address apontando para o router DHCP",
+      "Verificar bindings e estatísticas"
+    ],
+    cli: `<span class="cmt">! ── CONFIGURAR DHCP ─────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip dhcp excluded-address</span> <span class="val">192.168.10.1 192.168.10.10</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip dhcp pool</span> <span class="val">VLAN10-POOL</span>
+R1(dhcp-config)<span class="mode">#</span> <span class="cmd">network</span> <span class="val">192.168.10.0 255.255.255.0</span>
+R1(dhcp-config)<span class="mode">#</span> <span class="cmd">default-router</span> <span class="val">192.168.10.1</span>
+R1(dhcp-config)<span class="mode">#</span> <span class="cmd">dns-server</span> <span class="val">8.8.8.8 8.8.4.4</span>
+R1(dhcp-config)<span class="mode">#</span> <span class="cmd">lease</span> <span class="val">7</span>
+
+<span class="cmt">! ── RELAY (outro segmento) ───────────────</span>
+SW-L3(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">vlan 20</span>
+SW-L3(config-if)<span class="mode">#</span> <span class="cmd">ip helper-address</span> <span class="val">192.168.10.1</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip dhcp binding</span>
+R1<span class="mode">#</span> <span class="cmd">show ip dhcp pool</span>
+R1<span class="mode">#</span> <span class="cmd">show ip dhcp conflict</span>`
+  },
+  {
+    id: 7,
+    title: "SSH — Acesso Seguro ao Dispositivo",
+    obj: "Habilitar SSH v2 no router/switch, desabilitando Telnet por segurança.",
+    steps: [
+      "Configurar hostname e domain-name (obrigatório para gerar chaves RSA)",
+      "Gerar par de chaves RSA com mínimo 2048 bits",
+      "Forçar uso de SSHv2",
+      "Criar usuário local com senha e privilege level",
+      "Configurar as linhas VTY para aceitar apenas SSH",
+      "Aplicar autenticação local nas linhas"
+    ],
+    cli: `R1(config)<span class="mode">#</span> <span class="cmd">hostname</span> <span class="val">R1</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip domain-name</span> <span class="val">lab.ccna.local</span>
+R1(config)<span class="mode">#</span> <span class="cmd">crypto key generate rsa modulus</span> <span class="val">2048</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip ssh version</span> <span class="val">2</span>
+R1(config)<span class="mode">#</span> <span class="cmd">username</span> <span class="val">admin</span> <span class="cmd">privilege</span> <span class="val">15</span> <span class="cmd">secret</span> <span class="val">Cisco123!</span>
+R1(config)<span class="mode">#</span> <span class="cmd">line vty</span> <span class="val">0 4</span>
+R1(config-line)<span class="mode">#</span> <span class="cmd">login local</span>
+R1(config-line)<span class="mode">#</span> <span class="cmd">transport input</span> <span class="kw">ssh</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip ssh</span>
+R1<span class="mode">#</span> <span class="cmd">show ssh</span>`
+  },
+  {
+    id: 8,
+    title: "HSRP — Gateway Redundante com IP Virtual",
+    obj: "Configurar dois roteadores com IP virtual compartilhado, forçando Active e Standby via prioridade.",
+    steps: [
+      "Conectar ambos os routers ao mesmo segmento LAN (mesma VLAN/subnet)",
+      "Atribuir IPs reais distintos nas interfaces de cada router",
+      "Ativar HSRP no grupo com o IP virtual (VIP) que os hosts usarão como gateway",
+      "Definir prioridade maior no router que deve ser Active (padrão: 100)",
+      "Habilitar preempt para que o router de maior prioridade retome o papel de Active após falha",
+      "Verificar estado Active/Standby e o VIP"
+    ],
+    cli: `<span class="cmt">! ── R1 (Active — prioridade maior) ──────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">ip address</span> <span class="val">192.168.1.1 255.255.255.0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">standby</span> <span class="val">1</span> <span class="cmd">ip</span> <span class="val">192.168.1.254</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">standby</span> <span class="val">1</span> <span class="cmd">priority</span> <span class="val">110</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">standby</span> <span class="val">1</span> <span class="kw">preempt</span>
+
+<span class="cmt">! ── R2 (Standby — prioridade padrão) ────</span>
+R2(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R2(config-if)<span class="mode">#</span> <span class="cmd">ip address</span> <span class="val">192.168.1.2 255.255.255.0</span>
+R2(config-if)<span class="mode">#</span> <span class="cmd">standby</span> <span class="val">1</span> <span class="cmd">ip</span> <span class="val">192.168.1.254</span>
+R2(config-if)<span class="mode">#</span> <span class="cmd">standby</span> <span class="val">1</span> <span class="cmd">priority</span> <span class="val">100</span>
+R2(config-if)<span class="mode">#</span> <span class="cmd">standby</span> <span class="val">1</span> <span class="kw">preempt</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show standby</span>
+R1<span class="mode">#</span> <span class="cmd">show standby</span> <span class="arg">brief</span>`
+  },
+  {
+    id: 9,
+    title: "EtherChannel com LACP (Port-Channel)",
+    obj: "Agregar duas interfaces físicas entre dois switches usando LACP no modo active.",
+    steps: [
+      "Verificar que as interfaces têm mesma velocidade, duplex, VLAN e modo (trunk)",
+      "Configurar as interfaces físicas como trunk em ambos os switches",
+      "Atribuir as interfaces ao channel-group com modo LACP active",
+      "O port-channel virtual herda automaticamente as configurações de trunk",
+      "Verificar o bundle com show etherchannel summary (esperar flag SU)"
+    ],
+    cli: `<span class="cmt">! ── SW1 ──────────────────────────────────</span>
+SW1(config)<span class="mode">#</span> <span class="cmd">interface range</span> <span class="arg">g0/1 - 2</span>
+SW1(config-if-range)<span class="mode">#</span> <span class="cmd">switchport mode</span> <span class="kw">trunk</span>
+SW1(config-if-range)<span class="mode">#</span> <span class="cmd">channel-group</span> <span class="val">1</span> <span class="cmd">mode</span> <span class="kw">active</span>
+
+<span class="cmt">! ── SW2 ──────────────────────────────────</span>
+SW2(config)<span class="mode">#</span> <span class="cmd">interface range</span> <span class="arg">g0/1 - 2</span>
+SW2(config-if-range)<span class="mode">#</span> <span class="cmd">switchport mode</span> <span class="kw">trunk</span>
+SW2(config-if-range)<span class="mode">#</span> <span class="cmd">channel-group</span> <span class="val">1</span> <span class="cmd">mode</span> <span class="kw">active</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+SW1<span class="mode">#</span> <span class="cmd">show etherchannel summary</span>
+<span class="cmt">! Flags esperadas: SU = Layer2 bundle Up · P = in Port-channel</span>
+SW1<span class="mode">#</span> <span class="cmd">show etherchannel</span> <span class="val">1</span> <span class="cmd">port-channel</span>
+SW1<span class="mode">#</span> <span class="cmd">show interfaces</span> <span class="arg">port-channel 1</span>`
+  },
+  {
+    id: 10,
+    title: "CDP, LLDP e NTP — Descoberta e Sincronização",
+    obj: "Habilitar protocolos de descoberta de vizinhos e configurar sincronização de tempo via NTP.",
+    steps: [
+      "Verificar se CDP está habilitado globalmente (padrão: ativo em IOS)",
+      "Habilitar LLDP globalmente (padrão: desabilitado) e por interface",
+      "Desabilitar CDP em interfaces voltadas para usuários finais (segurança)",
+      "Configurar o router como cliente NTP apontando para o servidor",
+      "Opcionalmente configurar o router como servidor NTP para a rede interna",
+      "Verificar vizinhos descobertos e sincronização de horário"
+    ],
+    timerNote: `<table class="mini-table" style="margin-top:0">
+      <tr><th>Protocolo</th><th>Padrão</th><th>Hello (Send)</th><th>Hold-time</th></tr>
+      <tr><td><b>CDP</b></td><td><span class="warn">Cisco proprietário</span></td><td><span class="hl">60s</span></td><td><span class="hl">180s</span></td></tr>
+      <tr><td><b>LLDP</b></td><td><span class="ok">IEEE 802.1AB</span></td><td><span class="hl">30s</span></td><td><span class="hl">120s</span></td></tr>
+    </table>`,
+    cli: `<span class="cmt">! ── CDP ─────────────────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">cdp run</span>
+<span class="cmt">! Desabilitar em interfaces de usuário (segurança)</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/1</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">no cdp enable</span>
+
+<span class="cmt">! ── LLDP ─────────────────────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">lldp run</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">lldp transmit</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">lldp receive</span>
+
+<span class="cmt">! ── NTP ─────────────────────────────────</span>
+<span class="cmt">! Cliente NTP (sincroniza com servidor externo)</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ntp server</span> <span class="val">216.239.35.0</span>
+<span class="cmt">! Servidor NTP (distribui tempo para a rede interna)</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ntp master</span> <span class="val">3</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show cdp neighbors</span> <span class="arg">detail</span>
+R1<span class="mode">#</span> <span class="cmd">show lldp neighbors</span>
+R1<span class="mode">#</span> <span class="cmd">show ntp status</span>
+R1<span class="mode">#</span> <span class="cmd">show clock</span>`
+  },
+  {
+    id: 11,
+    title: "Rotas Flutuantes — Roteamento Estático de Backup",
+    obj: "Configurar rota principal e rota flutuante de backup com AD superior, para IPv4 e IPv6.",
+    steps: [
+      "Configurar a rota primária com AD padrão (1) — usada normalmente",
+      "Configurar a rota flutuante com AD elevada (ex: 5) — só entra na tabela se a primária cair",
+      "A rota com menor AD sempre vence; a flutuante fica 'escondida' enquanto a primária existe",
+      "Repetir o processo para IPv6 com distância administrativa via parâmetro final",
+      "Verificar qual rota está ativa na tabela com show ip route e show ipv6 route"
+    ],
+    cli: `<span class="cmt">! ── IPv4 — Rota principal (AD padrão = 1) ──</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip route</span> <span class="val">0.0.0.0 0.0.0.0</span> <span class="arg">10.0.0.1</span>
+
+<span class="cmt">! ── IPv4 — Rota flutuante (AD = 5 > 1) ─────</span>
+<span class="cmt">! Só entra na tabela se a rota acima for removida</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ip route</span> <span class="val">0.0.0.0 0.0.0.0</span> <span class="arg">10.0.1.1</span> <span class="val">5</span>
+
+<span class="cmt">! ── IPv6 — Rota principal ───────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ipv6 route</span> <span class="val">::/0</span> <span class="arg">2001:db8:0:1::1</span>
+
+<span class="cmt">! ── IPv6 — Rota flutuante (AD = 5) ─────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">ipv6 route</span> <span class="val">::/0</span> <span class="arg">2001:db8:0:2::1</span> <span class="val">5</span>
+
+<span class="cmt">! ── VERIFICAR ───────────────────────────────</span>
+R1<span class="mode">#</span> <span class="cmd">show ip route</span>
+<span class="cmt">! Rota flutuante NÃO aparece enquanto a principal estiver ativa</span>
+R1<span class="mode">#</span> <span class="cmd">show ip route static</span>
+R1<span class="mode">#</span> <span class="cmd">show ipv6 route</span>
+
+<span class="cmt">! ── SIMULANDO FALHA (teste) ─────────────────</span>
+R1(config)<span class="mode">#</span> <span class="cmd">interface</span> <span class="arg">g0/0</span>
+R1(config-if)<span class="mode">#</span> <span class="cmd">shutdown</span>
+<span class="cmt">! Agora show ip route mostrará a rota flutuante</span>`
+  },
+  {
+    id: 12,
+    title: "WLAN via WLC — Configuração pela Interface Gráfica",
+    obj: "Criar uma WLAN corporativa na Wireless LAN Controller seguindo o fluxo de menus da simulação GUI do exame.",
+    steps: [
+      "Acessar a WLC pelo browser: https://[IP-da-WLC] → fazer login com credenciais de admin",
+      "Navegar até: menu superior → aba WLAN → clicar em 'Create New' → Go",
+      "Preencher: Type = WLAN · Profile Name = CORP-WLAN · SSID = CORP-WIFI · ID = 1 → Apply",
+      "Na aba General: marcar Status = Enabled · Interface/Group = management (ou VLAN desejada)",
+      "Na aba Security → Layer 2: selecionar WPA+WPA2 → habilitar WPA2 Policy → AES",
+      "Auth Key Mgmt: se Personal → PSK (digitar senha) · se Enterprise → 802.1X (configurar RADIUS)",
+      "Na aba Advanced: habilitar opções como FlexConnect Local Switching se necessário → Apply",
+      "Verificar WLAN criada na lista: Status deve aparecer como Enabled (azul/verde)"
+    ],
+    cli: `<span class="cmt">! ATENÇÃO: WLC é configurada via GUI (browser)</span>
+<span class="cmt">! Os comandos abaixo são de VERIFICAÇÃO via CLI da WLC</span>
+
+<span class="cmt">! ── Verificar WLANs configuradas ────────────</span>
+WLC<span class="mode">></span> <span class="cmd">show wlan summary</span>
+
+<span class="cmt">! ── Detalhes de uma WLAN específica ─────────</span>
+WLC<span class="mode">></span> <span class="cmd">show wlan</span> <span class="val">1</span>
+
+<span class="cmt">! ── Verificar APs associados ────────────────</span>
+WLC<span class="mode">></span> <span class="cmd">show ap summary</span>
+
+<span class="cmt">! ── Verificar clientes conectados ───────────</span>
+WLC<span class="mode">></span> <span class="cmd">show client summary</span>
+
+<span class="cmt">! ── Verificar configuração RADIUS (Enterprise)</span>
+WLC<span class="mode">></span> <span class="cmd">show radius summary</span>
+
+<span class="cmt">! ── Fluxo GUI resumido para a prova: ────────</span>
+<span class="cmt">! WLANs → Create New → Go</span>
+<span class="cmt">!   → General: Status=Enabled, Interface=mgmt</span>
+<span class="cmt">!   → Security → L2: WPA+WPA2 → AES</span>
+<span class="cmt">!   → Auth: PSK (Personal) ou 802.1X (Enterprise)</span>
+<span class="cmt">!   → Advanced → Apply → Save Config</span>`
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER — PILLS
+═══════════════════════════════════════════════════════════════ */
+const catMap = {
+  NET: { cls: "tag-net icon-net", label: "Net Fund." },
+  ACC: { cls: "tag-acc icon-acc", label: "Net Access" },
+  IPC: { cls: "tag-ipc icon-ipc", label: "IP Connectivity" },
+  SVC: { cls: "tag-svc icon-svc", label: "IP Services" },
+  SEC: { cls: "tag-sec icon-sec", label: "Security" },
+  AUT: { cls: "tag-aut icon-aut", label: "Automation" }
+};
+
+function renderPills(filter, query) {
+  const container = document.getElementById('pills-container');
+  const empty = document.getElementById('pills-empty');
+  const q = (query || '').toLowerCase();
+  const filtered = PILLS.filter(p => {
+    const matchCat = filter === 'all' || p.cat === filter;
+    const matchQ = !q || p.title.toLowerCase().includes(q) || p.html.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  container.innerHTML = filtered.map(p => {
+    const m = catMap[p.cat];
+    const [iconCls] = m.cls.split(' ');
+    const tagCls = m.cls.split(' ')[0];
+    return `<div class="card">
+      <div class="card-header">
+        <div class="card-icon ${iconCls}">${p.icon}</div>
+        <div class="card-title">${p.title}</div>
+        <span class="card-tag tag-${p.cat.toLowerCase()}">${m.label}</span>
+      </div>
+      <div class="card-body">${p.html}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER — LABS
+═══════════════════════════════════════════════════════════════ */
+function renderLabs(query) {
+  const container = document.getElementById('labs-container');
+  const empty = document.getElementById('labs-empty');
+  const q = (query || '').toLowerCase();
+  const filtered = LABS.filter(l =>
+    !q || l.title.toLowerCase().includes(q) || l.obj.toLowerCase().includes(q)
+  );
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  container.innerHTML = filtered.map(l => `
+    <div class="lab-card" id="lab-${l.id}">
+      <div class="lab-header" onclick="toggleLab(${l.id})">
+        <div class="lab-num">${l.id}</div>
+        <div class="lab-title-block">
+          <div class="lab-title">${l.title}</div>
+          <div class="lab-obj">${l.obj}</div>
+        </div>
+        <span class="lab-chevron">▾</span>
+      </div>
+      <div class="lab-body">
+        ${l.timerNote ? `<div class="lab-section">
+          <div class="lab-section-title">⚠ Timers — Pegadinha da Prova</div>
+          ${l.timerNote}
+        </div>` : ''}
+        <div class="lab-section">
+          <div class="lab-section-title">Sequência Lógica</div>
+          <ul class="lab-steps">
+            ${l.steps.map((s, i) => `<li><span class="step-n">${i+1}</span><span>${s}</span></li>`).join('')}
+          </ul>
+        </div>
+        <div class="lab-section">
+          <div class="lab-section-title">Comandos Cisco IOS</div>
+          <div class="cli-block">
+            <div class="cli-topbar">● Cisco IOS Terminal</div>
+            <div class="cli-code">${l.cli}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleLab(id) {
+  const el = document.getElementById('lab-' + id);
+  el.classList.toggle('open');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + name).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FILTERS & SEARCH
+═══════════════════════════════════════════════════════════════ */
+let currentFilter = 'all';
+let currentQuery = '';
+
+document.getElementById('filter-bar').addEventListener('click', e => {
+  const pill = e.target.closest('.filter-pill');
+  if (!pill) return;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  currentFilter = pill.dataset.filter;
+  renderPills(currentFilter, currentQuery);
+});
+
+document.getElementById('search-teoria').addEventListener('input', e => {
+  currentQuery = e.target.value;
+  renderPills(currentFilter, currentQuery);
+});
+
+document.getElementById('search-labs').addEventListener('input', e => {
+  renderLabs(e.target.value);
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+renderPills('all', '');
+renderLabs('');
+</script>
+</body>
+</html>
