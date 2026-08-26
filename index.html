@@ -148,6 +148,8 @@
       border-radius: 10px;
       padding: 14px 14px 12px;
       margin-bottom: 10px;
+      min-width: 0;
+      overflow: hidden;
     }
     .card-header {
       display: flex;
@@ -183,6 +185,7 @@
     .card-body .bad { color: var(--red); font-weight: 600; }
 
     /* mini table */
+    .mini-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
     .mini-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
     .mini-table th {
       background: var(--surface2);
@@ -1393,14 +1396,16 @@ function renderPills(filter, query) {
   container.innerHTML = filtered.map(p => {
     const m = catMap[p.cat];
     const [iconCls] = m.cls.split(' ');
-    const tagCls = m.cls.split(' ')[0];
+    const bodyHtml = p.html.replace(/<table class="mini-table"/g,
+      '<div class="mini-table-wrap"><table class="mini-table"')
+      .replace(/<\/table>/g, '</table></div>');
     return `<div class="card">
       <div class="card-header">
         <div class="card-icon ${iconCls}">${p.icon}</div>
         <div class="card-title">${p.title}</div>
         <span class="card-tag tag-${p.cat.toLowerCase()}">${m.label}</span>
       </div>
-      <div class="card-body">${p.html}</div>
+      <div class="card-body">${bodyHtml}</div>
     </div>`;
   }).join('');
 }
