@@ -6,103 +6,96 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="CCNA Review" />
-  <meta name="theme-color" content="#161616" />
-  <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='0' fill='%23161616'/%3E%3Ctext x='90' y='122' font-size='96' text-anchor='middle'%3E📡%3C/text%3E%3C/svg%3E" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23161616'/%3E%3Ctext x='16' y='26' font-size='22' text-anchor='middle'%3E📡%3C/text%3E%3C/svg%3E" />
-  <!-- IBM Plex Sans + Mono via Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <!-- Carbon G100 tokens -->
+  <meta name="apple-mobile-web-app-title" content="Pocket CCNA Review" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%230d1117'/%3E%3Ctext x='90' y='122' font-size='96' text-anchor='middle'%3E📡%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d1117'/%3E%3Ctext x='16' y='26' font-size='22' text-anchor='middle'%3E📡%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/css/tokens.css" />
-  <!-- Carbon components (Tile, Tag, Accordion, Snippet, Search…) -->
   <link rel="stylesheet" href="assets/css/components.css" />
-  <!-- UI Shell layout (Header, Sidenav, Bottom Nav, Grid) -->
   <link rel="stylesheet" href="assets/css/layout.css" />
   <title>Pocket CCNA Review</title>
 </head>
 <body>
 <div id="app">
 
-  <!-- ═══ CARBON UI SHELL HEADER ═══════════════════════════════ -->
-  <header class="cds-header">
-    <span class="cds-header__name">
-      <span>📡</span>
-      <span class="prefix">Pocket</span>&nbsp;CCNA Review
-    </span>
-    <span class="cds-header__version">Cisco 200-301 · v1.2.0</span>
+  <!-- ═══ HEADER ══════════════════════════════════════════════ -->
+  <header>
+    <div>
+      <div class="logo">📡 Pocket CCNA Review</div>
+      <div class="subtitle">Cisco 200-301</div>
+    </div>
+    <div class="badge">v1.2.0</div>
   </header>
 
   <div id="body-area">
 
-    <!-- ═══ CARBON SIDE NAVIGATION (desktop) ═══════════════════ -->
+    <!-- ═══ SIDE NAV (desktop) ══════════════════════════════════ -->
     <nav id="sidenav">
       <div class="sidenav__section-title">Seções</div>
 
       <button class="sidenav__link active" id="btn-sidebar-teoria" onclick="showView('teoria')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-          <path d="M28 5H10a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zM18 27H4V13h14zm10-6H20v-8a2 2 0 0 0-2-2H10V7h18z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
         </svg>
         Teoria
       </button>
 
       <button class="sidenav__link" id="btn-sidebar-labs" onclick="showView('labs')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-          <path d="M29.4 26L22 14.8V6h1a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2h1v8.8L2.6 26A2 2 0 0 0 4.3 29H27.7a2 2 0 0 0 1.7-3zm-16.6-11.5A2 2 0 0 0 13 13V6h6v7a2 2 0 0 0 .2.9l4.5 7.1H8.3z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
         </svg>
         Laboratórios
       </button>
 
       <div class="sidenav__footer">
-        IBM Carbon Design System<br>
-        Tema G100 · v1.2.0
+        Pocket CCNA Review<br>
+        Cisco 200-301
       </div>
     </nav>
 
-    <!-- ═══ MAIN ════════════════════════════════════════════════ -->
+    <!-- ═══ MAIN ═════════════════════════════════════════════════ -->
     <main>
 
-      <!-- ── TEORIA ─────────────────────────────────────────── -->
+      <!-- ── TEORIA ──────────────────────────────────────────── -->
       <div id="view-teoria" class="view active">
         <div class="content-inner">
 
-          <div class="cds-search">
-            <svg class="cds-search__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-              <path d="M29 27.6L21 19.5a11 11 0 1 0-1.4 1.4l8 8.1zM13 22a9 9 0 1 1 9-9 9 9 0 0 1-9 9z"/>
+          <div class="search-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <input class="cds-search__input" id="search-teoria" type="search" placeholder="Buscar pílula de teoria…" />
+            <input class="search-input" id="search-teoria" type="search" placeholder="Buscar pílula de teoria…" />
           </div>
 
-          <div class="cds-content-switcher" id="filter-bar">
-            <button class="cds-content-switcher__btn active" data-filter="all">Todos</button>
-            <button class="cds-content-switcher__btn" data-filter="NET">Net Fundamentals</button>
-            <button class="cds-content-switcher__btn" data-filter="ACC">Network Access</button>
-            <button class="cds-content-switcher__btn" data-filter="IPC">IP Connectivity</button>
-            <button class="cds-content-switcher__btn" data-filter="SVC">IP Services</button>
-            <button class="cds-content-switcher__btn" data-filter="SEC">Security</button>
-            <button class="cds-content-switcher__btn" data-filter="AUT">Automation</button>
+          <div class="filter-bar" id="filter-bar">
+            <span class="filter-pill active" data-filter="all">Todos</span>
+            <span class="filter-pill" data-filter="NET">Net Fundamentals</span>
+            <span class="filter-pill" data-filter="ACC">Network Access</span>
+            <span class="filter-pill" data-filter="IPC">IP Connectivity</span>
+            <span class="filter-pill" data-filter="SVC">IP Services</span>
+            <span class="filter-pill" data-filter="SEC">Security</span>
+            <span class="filter-pill" data-filter="AUT">Automation</span>
           </div>
 
           <div id="pills-container"></div>
-          <div id="pills-empty" class="cds-empty hidden">Nenhuma pílula encontrada.</div>
+          <div id="pills-empty" class="empty hidden">Nenhuma pílula encontrada.</div>
 
         </div>
       </div>
 
-      <!-- ── LABS ───────────────────────────────────────────── -->
+      <!-- ── LABS ────────────────────────────────────────────── -->
       <div id="view-labs" class="view">
         <div class="content-inner">
 
-          <div class="cds-search">
-            <svg class="cds-search__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-              <path d="M29 27.6L21 19.5a11 11 0 1 0-1.4 1.4l8 8.1zM13 22a9 9 0 1 1 9-9 9 9 0 0 1-9 9z"/>
+          <div class="search-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <input class="cds-search__input" id="search-labs" type="search" placeholder="Buscar laboratório…" />
+            <input class="search-input" id="search-labs" type="search" placeholder="Buscar laboratório…" />
           </div>
 
           <div id="labs-container"></div>
-          <div id="labs-empty" class="cds-empty hidden">Nenhum laboratório encontrado.</div>
+          <div id="labs-empty" class="empty hidden">Nenhum laboratório encontrado.</div>
 
         </div>
       </div>
@@ -113,14 +106,14 @@
   <!-- ═══ BOTTOM NAV (mobile) ══════════════════════════════════ -->
   <nav id="bottom-nav">
     <button class="active" id="btn-teoria" onclick="showView('teoria')">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-        <path d="M28 5H10a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zM18 27H4V13h14zm10-6H20v-8a2 2 0 0 0-2-2H10V7h18z"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
       </svg>
       Teoria
     </button>
     <button id="btn-labs" onclick="showView('labs')">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-        <path d="M29.4 26L22 14.8V6h1a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2h1v8.8L2.6 26A2 2 0 0 0 4.3 29H27.7a2 2 0 0 0 1.7-3zm-16.6-11.5A2 2 0 0 0 13 13V6h6v7a2 2 0 0 0 .2.9l4.5 7.1H8.3z"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
       </svg>
       Labs
     </button>
