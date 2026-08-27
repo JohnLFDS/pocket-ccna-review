@@ -5,7 +5,6 @@
 
 /* ── Navigation ─────────────────────────────────────────────── */
 function showView(name) {
-  // Views
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
 
@@ -22,22 +21,17 @@ function showView(name) {
 
 /* ── Copy snippet ────────────────────────────────────────────── */
 function copySnippet(btn) {
-  const codeEl = btn.closest('.cds-snippet').querySelector('.cds-snippet__code');
+  const codeEl = btn.closest('.cli-block').querySelector('.cli-code');
   const text   = codeEl ? codeEl.innerText : '';
+
   navigator.clipboard.writeText(text).then(() => {
     btn.classList.add('copied');
-    btn.innerHTML = `<svg viewBox="0 0 32 32" fill="currentColor" width="16" height="16" aria-hidden="true">
-      <path d="M13 24L4 15l1.4-1.4L13 21.2 26.6 7.6 28 9z"/>
-    </svg> Copiado!`;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg> Copiado!`;
     setTimeout(() => {
       btn.classList.remove('copied');
-      btn.innerHTML = `<svg viewBox="0 0 32 32" fill="currentColor" width="16" height="16" aria-hidden="true">
-        <path d="M28 10v18H10V10h18m0-2H10a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2z"/>
-        <path d="M4 18H2V4a2 2 0 0 1 2-2h14v2H4z"/>
-      </svg> Copiar`;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copiar`;
     }, 2000);
   }).catch(() => {
-    // Fallback para browsers sem clipboard API
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
@@ -51,17 +45,16 @@ function copySnippet(btn) {
   });
 }
 
-/* ── Filter bar (Content Switcher) ──────────────────────────── */
+/* ── Filter bar (pills) ──────────────────────────────────────── */
 let currentFilter = 'all';
 let currentQuery  = '';
 
 document.getElementById('filter-bar').addEventListener('click', e => {
-  const btn = e.target.closest('.cds-content-switcher__btn');
-  if (!btn) return;
-  document.querySelectorAll('.cds-content-switcher__btn')
-    .forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFilter = btn.dataset.filter;
+  const pill = e.target.closest('.filter-pill');
+  if (!pill) return;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  currentFilter = pill.dataset.filter;
   renderPills(currentFilter, currentQuery);
 });
 
