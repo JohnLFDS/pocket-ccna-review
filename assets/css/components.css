@@ -1,0 +1,470 @@
+/* ═══════════════════════════════════════════════════════════════
+   CARBON COMPONENTS — Manual replica do Carbon Design System
+   Componentes: Tile, Tag, Accordion, Code Snippet, Search,
+                Content Switcher, Data Table, Inline Notification
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Reset + Base ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+html, body {
+  height: 100%;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+  font-family: 'IBM Plex Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Utility ─────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON SEARCH
+══════════════════════════════════════════════════════════════ */
+.cds-search {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.cds-search__icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cds-icon-secondary);
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.cds-search__input {
+  width: 100%;
+  height: 2.5rem;
+  background: var(--cds-layer-01);
+  border: none;
+  border-bottom: 1px solid var(--cds-border-strong-01);
+  color: var(--cds-text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0 2.5rem 0 2.5rem;
+  outline: none;
+  -webkit-appearance: none;
+  transition: background 0.11s;
+}
+.cds-search__input::placeholder { color: var(--cds-text-placeholder); }
+.cds-search__input:focus {
+  background: var(--cds-layer-02);
+  border-bottom-color: var(--cds-focus);
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON CONTENT SWITCHER  (filter bar)
+══════════════════════════════════════════════════════════════ */
+.cds-content-switcher {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  margin-bottom: 1rem;
+}
+.cds-content-switcher::-webkit-scrollbar { display: none; }
+
+.cds-content-switcher__btn {
+  flex-shrink: 0;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-strong-01);
+  border-right: none;
+  color: var(--cds-text-secondary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  padding: 0 1rem;
+  height: 2.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.11s, color 0.11s;
+  letter-spacing: 0.16px;
+}
+.cds-content-switcher__btn:last-child {
+  border-right: 1px solid var(--cds-border-strong-01);
+}
+.cds-content-switcher__btn:hover {
+  background: var(--cds-layer-hover-01);
+  color: var(--cds-text-primary);
+}
+.cds-content-switcher__btn.active {
+  background: var(--cds-layer-selected-01);
+  color: var(--cds-text-primary);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON TAG
+══════════════════════════════════════════════════════════════ */
+.cds-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.32px;
+  border-radius: 0.9375rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cds-tag--blue   { background: var(--tag-blue-bg);   color: var(--tag-blue-text); }
+.cds-tag--green  { background: var(--tag-green-bg);  color: var(--tag-green-text); }
+.cds-tag--orange { background: var(--tag-orange-bg); color: var(--tag-orange-text); }
+.cds-tag--purple { background: var(--tag-purple-bg); color: var(--tag-purple-text); }
+.cds-tag--red    { background: var(--tag-red-bg);    color: var(--tag-red-text); }
+.cds-tag--teal   { background: var(--tag-teal-bg);   color: var(--tag-teal-text); }
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON TILE  (pílulas de teoria)
+══════════════════════════════════════════════════════════════ */
+.cds-tile {
+  background: var(--cds-layer-01);
+  border: none;
+  border-bottom: 1px solid var(--cds-border-subtle-00);
+  padding: 1rem;
+  min-width: 0;
+  overflow: hidden;
+  transition: background 0.11s;
+  position: relative;
+}
+.cds-tile::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 0.11s;
+}
+.cds-tile:hover { background: var(--cds-layer-hover-01); }
+.cds-tile:hover::after { background: var(--cds-interactive); }
+
+.cds-tile__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.cds-tile__icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+  background: var(--cds-layer-02);
+}
+.cds-tile__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cds-text-primary);
+  line-height: 1.28572;
+  letter-spacing: 0.16px;
+  flex: 1;
+  padding-top: 0.125rem;
+}
+
+/* Tile body */
+.cds-tile__body {
+  font-size: 0.875rem;
+  color: var(--cds-text-secondary);
+  line-height: 1.5;
+  letter-spacing: 0.16px;
+}
+.cds-tile__body ul  { padding-left: 1.25rem; }
+.cds-tile__body li  { margin-bottom: 0.375rem; }
+.cds-tile__body b,
+.cds-tile__body strong { color: var(--cds-text-primary); font-weight: 600; }
+.cds-tile__body .hl   { color: var(--cds-link-primary);      font-weight: 600; }
+.cds-tile__body .ok   { color: var(--cds-support-success);   font-weight: 600; }
+.cds-tile__body .warn { color: var(--cds-support-warning);   font-weight: 600; }
+.cds-tile__body .bad  { color: var(--cds-support-error);     font-weight: 600; }
+.cds-tile__body .muted{ color: var(--cds-text-secondary); }
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON DATA TABLE  (mini-table)
+══════════════════════════════════════════════════════════════ */
+.mini-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  margin-top: 0.75rem;
+}
+.mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: var(--cds-layer-02);
+}
+.mini-table th {
+  background: var(--cds-layer-accent-01);
+  color: var(--cds-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.32px;
+  padding: 0.625rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  white-space: nowrap;
+}
+.mini-table td {
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid var(--cds-border-subtle-00);
+  color: var(--cds-text-primary);
+  line-height: 1.5;
+  vertical-align: top;
+}
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tr:hover td { background: var(--cds-layer-hover-01); }
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON ACCORDION  (lab cards)
+══════════════════════════════════════════════════════════════ */
+.cds-accordion { width: 100%; }
+
+.cds-accordion__item {
+  background: var(--cds-layer-01);
+  border-top: 1px solid var(--cds-border-subtle-01);
+  overflow: hidden;
+}
+.cds-accordion__item:last-child {
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+
+.cds-accordion__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.11s;
+  -webkit-tap-highlight-color: transparent;
+  font-family: inherit;
+}
+.cds-accordion__heading:hover { background: var(--cds-layer-hover-01); }
+
+.cds-accordion__num {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--cds-interactive);
+  color: var(--cds-text-on-color);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cds-accordion__title-block { flex: 1; min-width: 0; }
+.cds-accordion__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cds-text-primary);
+  letter-spacing: 0.16px;
+  line-height: 1.28572;
+}
+.cds-accordion__subtitle {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+  margin-top: 0.125rem;
+  letter-spacing: 0.32px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cds-accordion__arrow {
+  color: var(--cds-icon-secondary);
+  flex-shrink: 0;
+  transition: transform 0.11s;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.cds-accordion__item.open .cds-accordion__arrow { transform: rotate(180deg); }
+
+.cds-accordion__content { display: none; border-top: 1px solid var(--cds-border-subtle-00); }
+.cds-accordion__item.open .cds-accordion__content { display: block; }
+
+/* Lab body inner layout */
+.lab-body-inner { display: flex; flex-direction: column; }
+.lab-col-left, .lab-col-right { min-width: 0; }
+
+.lab-section {
+  padding: 1rem;
+  border-bottom: 1px solid var(--cds-border-subtle-00);
+}
+.lab-section:last-child { border-bottom: none; }
+
+.lab-section-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+/* Lab steps */
+.lab-steps { list-style: none; padding: 0; }
+.lab-steps li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-size: 0.875rem;
+  color: var(--cds-text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+.step-n {
+  background: var(--cds-layer-02);
+  border: 1px solid var(--cds-border-subtle-01);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--cds-interactive);
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON CODE SNIPPET — multi-line  (CLI block)
+══════════════════════════════════════════════════════════════ */
+.cds-snippet {
+  position: relative;
+  background: var(--cds-background);
+  border: 1px solid var(--cds-border-subtle-01);
+  overflow: hidden;
+}
+.cds-snippet__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cds-layer-02);
+  border-bottom: 1px solid var(--cds-border-subtle-00);
+  padding: 0 0.75rem;
+  height: 2.5rem;
+  gap: 0.5rem;
+}
+.cds-snippet__label {
+  font-size: 0.6875rem;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--cds-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  letter-spacing: 0.32px;
+}
+.cds-snippet__label::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--cds-support-success);
+}
+.cds-snippet__copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: none;
+  border: none;
+  color: var(--cds-text-secondary);
+  font-family: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.375rem 0.625rem;
+  transition: background 0.11s, color 0.11s;
+  letter-spacing: 0.32px;
+  white-space: nowrap;
+}
+.cds-snippet__copy-btn:hover {
+  background: var(--cds-background-active);
+  color: var(--cds-text-primary);
+}
+.cds-snippet__copy-btn.copied { color: var(--cds-support-success); }
+.cds-snippet__copy-btn svg { flex-shrink: 0; }
+
+.cds-snippet__code {
+  padding: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  overflow-x: auto;
+  white-space: pre;
+  color: #c6c6c6;
+  max-height: 28rem;
+}
+
+/* Syntax highlighting tokens */
+.cds-snippet__code .cmd  { color: #78a9ff; }
+.cds-snippet__code .arg  { color: #82cfff; }
+.cds-snippet__code .val  { color: #42be65; }
+.cds-snippet__code .cmt  { color: #6f6f6f; font-style: italic; }
+.cds-snippet__code .mode { color: #ff832b; }
+.cds-snippet__code .kw   { color: #be95ff; }
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON INLINE NOTIFICATION  (alertas dentro dos tiles)
+══════════════════════════════════════════════════════════════ */
+.cds-inline-notification {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  background: #2d0709;
+  border-left: 3px solid var(--cds-support-error);
+  padding: 0.875rem 1rem;
+  margin-top: 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--cds-text-primary);
+}
+.cds-inline-notification--warning {
+  background: #302200;
+  border-left-color: var(--cds-support-warning);
+}
+.cds-inline-notification code {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--cds-link-primary);
+  font-size: 0.8125rem;
+  background: var(--cds-layer-02);
+  padding: 0.0625rem 0.25rem;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════════════════════════════ */
+.cds-empty {
+  text-align: center;
+  color: var(--cds-text-secondary);
+  padding: 4rem 1.25rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.16px;
+}

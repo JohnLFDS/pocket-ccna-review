@@ -1,0 +1,245 @@
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT — Carbon UI Shell, Side Navigation, Bottom Nav, Grid
+═══════════════════════════════════════════════════════════════ */
+
+/* ── App shell ───────────────────────────────────────────────── */
+html, body { overflow: hidden; }
+#app { display: flex; flex-direction: column; height: 100dvh; }
+
+/* ══════════════════════════════════════════════════════════════
+   CARBON UI SHELL HEADER
+══════════════════════════════════════════════════════════════ */
+.cds-header {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  height: var(--shell-header-h);
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-00);
+  flex-shrink: 0;
+}
+.cds-header__name {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  height: 100%;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cds-text-primary);
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  gap: 0.5rem;
+}
+.cds-header__name .prefix {
+  font-weight: 400;
+  color: var(--cds-text-secondary);
+}
+.cds-header__version {
+  margin-left: auto;
+  margin-right: 1rem;
+  font-size: 0.6875rem;
+  color: var(--cds-text-secondary);
+  letter-spacing: 0.32px;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BODY AREA (sidenav + main)
+══════════════════════════════════════════════════════════════ */
+#body-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SIDE NAVIGATION — oculta no mobile
+══════════════════════════════════════════════════════════════ */
+#sidenav { display: none; }
+
+/* ══════════════════════════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════════════════════════ */
+main {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  min-width: 0;
+  background: var(--cds-background);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOTTOM NAVIGATION — mobile apenas
+══════════════════════════════════════════════════════════════ */
+#bottom-nav {
+  display: flex;
+  background: var(--cds-layer-01);
+  border-top: 1px solid var(--cds-border-subtle-00);
+  height: calc(3.5rem + var(--safe-bot));
+  padding-bottom: var(--safe-bot);
+  flex-shrink: 0;
+}
+#bottom-nav button {
+  flex: 1;
+  background: none;
+  border: none;
+  border-top: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: var(--cds-text-secondary);
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  cursor: pointer;
+  transition: background 0.11s, color 0.11s;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+}
+#bottom-nav button:hover { background: var(--cds-background-hover); }
+#bottom-nav button.active {
+  color: var(--cds-interactive);
+  border-top-color: var(--cds-interactive);
+  background: var(--cds-layer-selected-01);
+}
+#bottom-nav button svg { width: 1.25rem; height: 1.25rem; }
+
+/* ══════════════════════════════════════════════════════════════
+   VIEWS
+══════════════════════════════════════════════════════════════ */
+.view { display: none; padding: 1rem 1rem 2rem; }
+.view.active { display: block; }
+.content-inner { width: 100%; }
+
+/* ══════════════════════════════════════════════════════════════
+   PILLS GRID — mobile: 1 coluna
+══════════════════════════════════════════════════════════════ */
+#pills-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.125rem;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABLET / DESKTOP  >=768px
+══════════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+
+  /* ── Side Navigation ─────────────────────────────────────── */
+  #sidenav {
+    display: flex;
+    flex-direction: column;
+    width: var(--sidenav-w);
+    min-width: var(--sidenav-w);
+    background: var(--cds-layer-01);
+    border-right: 1px solid var(--cds-border-subtle-00);
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding-top: 1.5rem;
+  }
+  .sidenav__section-title {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.32px;
+    color: var(--cds-text-secondary);
+    padding: 0 1rem 0.5rem;
+  }
+  .sidenav__link {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    width: 100%;
+    height: 2.5rem;
+    padding: 0 1rem;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    color: var(--cds-text-secondary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.16px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.11s, color 0.11s, border-color 0.11s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sidenav__link svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+  .sidenav__link:hover {
+    background: var(--cds-layer-hover-01);
+    color: var(--cds-text-primary);
+  }
+  .sidenav__link.active {
+    background: var(--cds-layer-selected-01);
+    color: var(--cds-text-primary);
+    font-weight: 600;
+    border-left-color: var(--cds-interactive);
+  }
+  .sidenav__footer {
+    margin-top: auto;
+    padding: 1rem;
+    font-size: 0.6875rem;
+    color: var(--cds-text-secondary);
+    border-top: 1px solid var(--cds-border-subtle-00);
+    line-height: 1.8;
+    letter-spacing: 0.32px;
+  }
+
+  /* ── Hide bottom nav ─────────────────────────────────────── */
+  #bottom-nav { display: none; }
+
+  /* ── Views ───────────────────────────────────────────────── */
+  .view { padding: 2rem 2.5rem 3rem; }
+  .view.active { display: flex; flex-direction: column; }
+  .content-inner { max-width: 1312px; margin: 0 auto; }
+
+  /* ── Pills grid: fluido min 380px ────────────────────────── */
+  #pills-container {
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+    gap: 0.125rem;
+  }
+
+  /* ── Tile desktop overrides ──────────────────────────────── */
+  .cds-tile { padding: 1.5rem; }
+  .cds-tile__header { margin-bottom: 1rem; }
+  .cds-tile__title { font-size: 1rem; }
+  .cds-tile__body  { font-size: 0.9375rem; line-height: 1.6; }
+  .cds-tile__body li { margin-bottom: 0.5rem; }
+
+  /* ── Data table desktop ──────────────────────────────────── */
+  .mini-table      { font-size: 0.9375rem; }
+  .mini-table th   { font-size: 0.8125rem; padding: 0.75rem 1rem; }
+  .mini-table td   { padding: 0.75rem 1rem; }
+
+  /* ── Accordion desktop ───────────────────────────────────── */
+  .cds-accordion__title    { font-size: 1rem; }
+  .cds-accordion__subtitle { font-size: 0.8125rem; }
+  .lab-section             { padding: 1.25rem 1.5rem; }
+  .lab-steps li            { font-size: 0.9375rem; }
+
+  /* ── Lab body 2 colunas ──────────────────────────────────── */
+  .lab-body-inner { flex-direction: row; align-items: flex-start; }
+  .lab-col-left  {
+    flex: 1;
+    min-width: 0;
+    border-right: 1px solid var(--cds-border-subtle-00);
+  }
+  .lab-col-right { flex: 1; min-width: 0; }
+  .lab-col-left  .lab-section { border-bottom: 1px solid var(--cds-border-subtle-00); }
+  .lab-col-left  .lab-section:last-child { border-bottom: none; }
+  .lab-col-right .lab-section { border-bottom: none; }
+
+  /* ── Code snippet desktop ────────────────────────────────── */
+  .cds-snippet__code { font-size: 0.9375rem; max-height: none; }
+
+  /* ── Search desktop ──────────────────────────────────────── */
+  .cds-search__input          { font-size: 1rem; height: 3rem; }
+  .cds-content-switcher__btn  { font-size: 1rem; height: 3rem; }
+}
