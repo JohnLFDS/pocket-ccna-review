@@ -1,69 +1,41 @@
 /* ═══════════════════════════════════════════════════════════════
-   CARBON DESIGN SYSTEM — G100 THEME TOKENS
-   Ref: carbondesignsystem.com/guidelines/color/usage
+   TOKENS — GitHub Dark palette
+   Baseado no design original v1.1.1 do Pocket CCNA Review
 ═══════════════════════════════════════════════════════════════ */
 :root {
+  /* ── Backgrounds ─────────────────────────────────────── */
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface2:  #21262d;
 
-  /* ── Background ──────────────────────────────────────────── */
-  --cds-background:           #161616;
-  --cds-background-hover:     #1f1f1f;
-  --cds-background-active:    #393939;
-  --cds-layer-01:             #262626;
-  --cds-layer-02:             #393939;
-  --cds-layer-hover-01:       #2e2e2e;
-  --cds-layer-selected-01:    #393939;
-  --cds-layer-accent-01:      #393939;
+  /* ── Border ──────────────────────────────────────────── */
+  --border:    #30363d;
 
-  /* ── Border ──────────────────────────────────────────────── */
-  --cds-border-subtle-00:     #393939;
-  --cds-border-subtle-01:     #525252;
-  --cds-border-strong-01:     #6f6f6f;
-  --cds-border-interactive:   #4589ff;
+  /* ── Text ────────────────────────────────────────────── */
+  --text:      #e6edf3;
+  --muted:     #8b949e;
 
-  /* ── Text ────────────────────────────────────────────────── */
-  --cds-text-primary:         #f4f4f4;
-  --cds-text-secondary:       #c6c6c6;
-  --cds-text-placeholder:     #6f6f6f;
-  --cds-text-disabled:        #525252;
-  --cds-text-on-color:        #ffffff;
-  --cds-text-inverse:         #161616;
+  /* ── Brand / Interactive ─────────────────────────────── */
+  --accent:    #58a6ff;
 
-  /* ── Interactive / Brand ─────────────────────────────────── */
-  --cds-interactive:          #4589ff;
-  --cds-focus:                #ffffff;
-  --cds-link-primary:         #78a9ff;
-  --cds-link-visited:         #be95ff;
+  /* ── Status colors ───────────────────────────────────── */
+  --green:     #3fb950;
+  --yellow:    #d29922;
+  --orange:    #f0883e;
+  --red:       #f85149;
+  --purple:    #bc8cff;
+  --cyan:      #39d353;
 
-  /* ── Support ─────────────────────────────────────────────── */
-  --cds-support-success:      #42be65;
-  --cds-support-warning:      #f1c21b;
-  --cds-support-error:        #fa4d56;
-  --cds-support-info:         #4589ff;
-  --cds-support-caution:      #ff832b;
+  /* ── Tag + icon backgrounds per category ────────────── */
+  --tag-net-bg:   #1c3a5e; --tag-net-text:   #58a6ff;
+  --tag-acc-bg:   #1c3a2e; --tag-acc-text:   #3fb950;
+  --tag-ipc-bg:   #3a2a1c; --tag-ipc-text:   #f0883e;
+  --tag-svc-bg:   #2e1c3a; --tag-svc-text:   #bc8cff;
+  --tag-sec-bg:   #3a1c1c; --tag-sec-text:   #f85149;
+  --tag-aut-bg:   #1c2e3a; --tag-aut-text:   #39d353;
 
-  /* ── Icon ────────────────────────────────────────────────── */
-  --cds-icon-primary:         #f4f4f4;
-  --cds-icon-secondary:       #c6c6c6;
-  --cds-icon-inverse:         #161616;
-
-  /* ── Tag palette (background / text) ────────────────────── */
-  --tag-blue-bg:    rgba(0, 67, 206, 0.1); --tag-blue-text:   #78a9ff;
-  --tag-green-bg:   #044317;               --tag-green-text:  #42be65;
-  --tag-orange-bg:  #3e1a00;               --tag-orange-text: #ff832b;
-  --tag-purple-bg:  #1c0f30;               --tag-purple-text: #be95ff;
-  --tag-red-bg:     #2d0709;               --tag-red-text:    #fa4d56;
-  --tag-teal-bg:    #022b30;               --tag-teal-text:   #3ddbd9;
-
-  /* ── Tag icon backgrounds (category icons) ───────────────── */
-  --icon-bg-net:    rgba(0, 67, 206, 0.1);
-  --icon-bg-acc:    #044317;
-  --icon-bg-ipc:    #3e1a00;
-  --icon-bg-svc:    #1c0f30;
-  --icon-bg-sec:    #2d0709;
-  --icon-bg-aut:    #022b30;
-
-  /* ── Layout ──────────────────────────────────────────────── */
-  --shell-header-h: 3rem;
-  --sidenav-w:      256px;
-  --safe-bot:       env(safe-area-inset-bottom, 0px);
+  /* ── Layout ──────────────────────────────────────────── */
+  --nav-h:     64px;
+  --sidenav-w: 220px;
+  --safe-bot:  env(safe-area-inset-bottom, 0px);
 }
